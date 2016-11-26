@@ -350,3 +350,74 @@ func TestParseLDelimNotMatch(t *testing.T) {
 		}
 	}
 }
+
+// ------------ LDELIM
+
+var rDelims = []string{
+	`const myObject = {ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim}`,
+	`{rdelim}`,
+	`{rdelim}, {ldelim}`,
+	`{rdelim})`,
+	`{rdelim}`,
+	`{rdelim}]`,
+	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}`,
+	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})`,
+}
+
+var expRDelims = []string{
+	`const myObject = {ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]}}`,
+	`}`,
+	`}, {ldelim}`,
+	`})`,
+	`}`,
+	`}]`,
+	`}, maybe: ""}, did: "not"}, work: "entirely"}`,
+	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]}})`,
+}
+
+var nonRDelims = []string{
+	`<body>`,
+	`{$some_variable}`,
+	`Outside the script tag may be pure html or may not`,
+	`<script type="text/javascript">`,
+	`let myVar = {json_decode($jsonVariable)}`,
+	`let myOtherVar = '{$wuuuu}'`,
+	`console.log({include file=$myCustomFile})`,
+	`funcion () {ldelim}`,
+	`let some = 0`,
+	`call({ldelim}`,
+	`hello: "world"`,
+	`world: "hello"`,
+	`let array = [{ldelim}`,
+	`hello: "world",`,
+	`myObject:{ldelim}`,
+	`one: 1,`,
+	`two: [2, 2]`,
+	`const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"`,
+	`</script>`,
+	`</body>`,
+}
+
+func TestParseRDelimMatch(t *testing.T) {
+	for i, line := range rDelims {
+		nl, matched := parseRDelim(line)
+
+		if !matched {
+			t.Fatalf("Should parse: %s", line)
+		}
+
+		if nl != expRDelims[i] {
+			t.Fatalf("Expected ldelim parsed: %s; got: %s", expRDelims[i], nl)
+		}
+	}
+}
+
+func TestParseRDelimNotMatch(t *testing.T) {
+	for _, line := range nonRDelims {
+		nl, matched := parseRDelim(line)
+
+		if matched || nl != line {
+			t.Fatalf("Should not match or perform change on string: %s", line)
+		}
+	}
+}

@@ -124,11 +124,19 @@ func parseInlineObject(line string) (string, bool) {
 }
 
 // ------------ LDELIM
-
 func parseLDelim(line string) (string, bool) {
 	if !strings.Contains(line, "{ldelim}") {
 		return line, false
 	}
 
 	return strings.Replace(line, "{ldelim}", "{", -1), true
+}
+
+// ------------ RDELIM
+func parseRDelim(line string) (string, bool) {
+	if !strings.Contains(line, "{rdelim}") {
+		return line, false
+	}
+
+	return strings.Replace(line, "{rdelim}", "}", -1), true
 }
