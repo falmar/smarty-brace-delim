@@ -154,7 +154,7 @@ var expRightBracket = []string{
 	`{rdelim}, { should`,
 	`be {rdelim}) good`,
 	`or {rdelim}] not?`,
-	`... maybe }] {rdelim}}?`,
+	`... maybe }] {rdelim}?`,
 }
 
 var nonRightBracket = []string{
@@ -184,26 +184,26 @@ var nonRightBracket = []string{
 }
 
 func TestIsRightBracket(t *testing.T) {
-	for _, line := range leftBracket {
-		if !isLeftBracket(line) {
+	for _, line := range rightBracket {
+		if !isRightBracket(line) {
 			t.Fatalf("Should be left bracket %s", line)
 		}
 	}
 }
 
 func TestIsNotRightBracket(t *testing.T) {
-	for _, line := range nonLeftBracket {
-		if isLeftBracket(line) {
+	for _, line := range nonRightBracket {
+		if isRightBracket(line) {
 			t.Fatalf("Should not be left bracket %s", line)
 		}
 	}
 }
 
 func TestParseRightBracket(t *testing.T) {
-	for i, line := range leftBracket {
-		nl := parseLeftBracket(line)
-		if nl != expLeftBracket[i] {
-			t.Fatalf("Expected bracket parsed %s; got: %s", expLeftBracket[i], nl)
+	for i, line := range rightBracket {
+		nl := parseRightBracket(line)
+		if nl != expRightBracket[i] {
+			t.Fatalf("Expected bracket parsed %s; got: %s", expRightBracket[i], nl)
 		}
 	}
 }
