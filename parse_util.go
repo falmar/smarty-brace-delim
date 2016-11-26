@@ -39,17 +39,17 @@ func isLeftBracket(line string) bool {
 	return match != nil && len(match) == 4 && match[3] != "}"
 }
 
-func parseLeftBracket(line string) string {
+func parseLeftBracket(line string) (string, bool) {
 	var nLine string
 	re := `(.*)(\{)(.*(}))?(.*)`
 	matches := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	if len(matches) != 6 {
-		return line
+		return line, false
 	}
 
 	if matches[1] != "" {
-		nLine = parseLeftBracket(matches[1])
+		nLine, _ = parseLeftBracket(matches[1])
 	}
 
 	var matchDelim bool
@@ -65,7 +65,7 @@ func parseLeftBracket(line string) string {
 		nLine += matches[2]
 	}
 
-	return nLine + matches[3] + matches[5]
+	return nLine + matches[3] + matches[5], true
 }
 
 // ------------ RIGHT BRACKET
@@ -76,7 +76,7 @@ func isRightBracket(line string) bool {
 	return match != nil && len(match) == 3 && match[2] != "{"
 }
 
-func parseRightBracket(line string) string {
+func parseRightBracket(line string) (string, bool) {
 	var nLine string
 	re := `(.*)((\{)(.*))(\})(.*)`
 	matches := regexp.MustCompile(re).FindStringSubmatch(line)
@@ -85,7 +85,7 @@ func parseRightBracket(line string) string {
 		// take first regex actions
 
 		if matches[1] != "" {
-			nLine = parseRightBracket(matches[1])
+			nLine, _ = parseRightBracket(matches[1])
 		}
 
 		if matches[5] == "}" {
@@ -98,19 +98,19 @@ func parseRightBracket(line string) string {
 			}
 		}
 
-		return nLine + matches[6]
+		return nLine + matches[6], true
 	}
 
 	re = `(.*)(})(.*)`
 	matches = regexp.MustCompile(re).FindStringSubmatch(line)
 
 	if len(matches) != 4 {
-		return line
+		return line, false
 	}
 
 	if matches[1] != "" {
-		nLine = parseRightBracket(matches[1])
+		nLine, _ = parseRightBracket(matches[1])
 	}
 
-	return nLine + "{rdelim}" + matches[3]
+	return nLine + "{rdelim}" + matches[3], true
 }

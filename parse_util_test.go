@@ -132,7 +132,12 @@ func TestIsNotLeftBracket(t *testing.T) {
 
 func TestParseLeftBracket(t *testing.T) {
 	for i, line := range leftBracket {
-		nl := parseLeftBracket(line)
+		nl, matched := parseLeftBracket(line)
+
+		if !matched {
+			t.Fatalf("Should parse")
+		}
+
 		if nl != expLeftBracket[i] {
 			t.Fatalf("Expected bracket parsed: %s; got: %s", expLeftBracket[i], nl)
 		}
@@ -203,7 +208,12 @@ func TestIsNotRightBracket(t *testing.T) {
 
 func TestParseRightBracket(t *testing.T) {
 	for i, line := range rightBracket {
-		nl := parseRightBracket(line)
+		nl, matched := parseRightBracket(line)
+
+		if !matched {
+			t.Fatalf("Should parse")
+		}
+
 		if nl != expRightBracket[i] {
 			t.Fatalf("Expected bracket parsed: %s; got: %s", expRightBracket[i], nl)
 		}
