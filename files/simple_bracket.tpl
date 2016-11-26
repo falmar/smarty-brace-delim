@@ -9,7 +9,9 @@ let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
 
 funcion () {
+  let some = 0
   const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}
+
 }
 
 call({
@@ -27,7 +29,7 @@ let array = [{
 }]
 
 const strangeObject = {maybe: {it: {wont: {work: "?"
-}, maybe: ""}, not: "did"}, work: "entirely"}
+}, maybe: ""}, did: "not"}, work: "entirely"}
 
 inline_call({hello: "world", myObject:{one: 1, two: [2, 2]}})
 </script>

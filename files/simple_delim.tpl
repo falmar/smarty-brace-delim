@@ -29,7 +29,7 @@ let array = [{ldelim}
 {rdelim}]
 
 const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"
-{rdelim}, maybe: ""{rdelim}, dit: "not"{rdelim}, work: "entirely"{rdelim}
+{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}
 
 inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})
 </script>
