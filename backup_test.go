@@ -9,11 +9,46 @@ import (
 	"testing"
 )
 
+func TestBackupDontOverwrite(t *testing.T) {
+	path := "files/simple_bracket.tpl"
+
+	f, err := os.Create("files/simple_bracket_dow.tpl")
+	f.Close()
+	if err != nil {
+		t.Fatalf("Error creating fake backup file: %s", err)
+	}
+
+	_, err = createBackup(path, "_dow", false)
+	if err == nil {
+		t.Fatal("Should not overwrite file")
+	}
+}
+
+func TestBackupOverwrite(t *testing.T) {
+	path := "files/simple_bracket.tpl"
+
+	f, err := os.Create("files/simple_bracket_ow.tpl")
+	f.Close()
+	if err != nil {
+		t.Fatalf("Error creating fake backup file: %s", err)
+	}
+
+	backup, err := createBackup(path, "_ow", true)
+	if err != nil {
+		t.Fatalf("Should overwrite file %s", err)
+	}
+
+	_, err = os.Stat(backup)
+	if os.IsNotExist(err) {
+		t.Fatal("File should exist")
+	}
+}
+
 func TestBackup(t *testing.T) {
 	path := "files/simple_bracket.tpl"
 	expBackup := "files/simple_bracket_backup.tpl"
 
-	backup, err := createBackup(path, "_backup")
+	backup, err := createBackup(path, "_backup", true)
 	if err != nil {
 		t.Fatalf("Error during backup: %s", err)
 	}

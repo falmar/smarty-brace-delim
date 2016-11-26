@@ -6,12 +6,13 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"os"
 	"strings"
 )
 
-func createBackup(path, suffix string) (string, error) {
+func createBackup(path, suffix string, overwrite bool) (string, error) {
 	f, err := os.Open(path)
 	defer f.Close()
 	if err != nil {
@@ -20,6 +21,11 @@ func createBackup(path, suffix string) (string, error) {
 
 	name := f.Name()
 	outputName := name[:strings.Index(name, ".tpl")] + suffix + ".tpl"
+
+	_, err = os.Stat(outputName)
+	if !os.IsNotExist(err) && !overwrite {
+		return "", errors.New("Backup file already exist")
+	}
 
 	outputFile, err := os.Create(outputName)
 

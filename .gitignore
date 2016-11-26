@@ -1,5 +1,7 @@
 note
 *_parsed.tpl
 *_backup.tpl
+*_ow.tpl
+*_dow.tpl
 coverage.txt
 debug.test
