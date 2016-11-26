@@ -31,6 +31,8 @@ func isLeftBracket(line string) bool {
 }
 
 func parseLeftBracket(line string) string {
+	re := `(.+)?{(.+)?`
+	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return ""
+	return match[1] + "{ldelim}" + match[2]
 }

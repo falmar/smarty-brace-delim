@@ -77,9 +77,19 @@ func TestEndScriptTagNonTags(t *testing.T) {
 var leftBracket = []string{
 	"function () {",
 	"call({",
-	"myObject:{ // random comment",
+	"myObject: { // random comment",
 	"let array = [{",
 	"{",
+	"calling({my: {",
+}
+
+var expLeftBracket = []string{
+	"function () {ldelim}",
+	"call({ldelim}",
+	"myObject: {ldelim} // random comment",
+	"let array = [{ldelim}",
+	"{ldelim}",
+	"calling({my: {ldelim}",
 }
 
 var nonLeftBracket = []string{
@@ -116,6 +126,15 @@ func TestIsNotLeftBracket(t *testing.T) {
 	for _, line := range nonLeftBracket {
 		if isLeftBracket(line) {
 			t.Fatalf("Should not be left bracket %s", line)
+		}
+	}
+}
+
+func TestParseLeftBracket(t *testing.T) {
+	for i, line := range leftBracket {
+		nl := parseLeftBracket(line)
+		if nl != expLeftBracket[i] {
+			t.Fatalf("Expected bracket parsed %s; got: %s", expLeftBracket[i], nl)
 		}
 	}
 }
