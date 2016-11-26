@@ -26,6 +26,9 @@ let array = [{
   }
 }]
 
+const strangeObject = {maybe: {it: {wont: {work: "?"
+}, maybe: ""}, not: "did"}, work: "entirely"}
+
 inline_call({hello: "world", myObject:{one: 1, two: [2, 2]}})
 </script>
 </body>

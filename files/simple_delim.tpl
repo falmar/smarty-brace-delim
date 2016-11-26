@@ -28,6 +28,9 @@ let array = [{ldelim}
   {rdelim}
 {rdelim}]
 
+const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"
+{rdelim}, maybe: ""{rdelim}, dit: "not"{rdelim}, work: "entirely"{rdelim}
+
 inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})
 </script>
 </body>

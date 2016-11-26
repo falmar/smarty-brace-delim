@@ -4,7 +4,10 @@
 
 package main
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 // ------------ SCRIPT TAGS
 
@@ -37,10 +40,32 @@ func isLeftBracket(line string) bool {
 }
 
 func parseLeftBracket(line string) string {
-	re := `(.+)?\{(.+)?`
-	match := regexp.MustCompile(re).FindStringSubmatch(line)
+	var nLine string
+	re := `(.*)(\{)(.*(}))?(.*)`
+	matches := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return match[1] + "{ldelim}" + match[2]
+	if len(matches) != 6 {
+		return line
+	}
+
+	if matches[1] != "" {
+		nLine = parseLeftBracket(matches[1])
+	}
+
+	var matchDelim bool
+
+	if matches[2] == "{" {
+		if matches[4] != "}" {
+			matchDelim = true
+			nLine += "{ldelim}"
+		}
+	}
+
+	if !matchDelim {
+		nLine += matches[2]
+	}
+
+	return nLine + matches[3] + matches[5]
 }
 
 // ------------ RIGHT BRACKET
@@ -52,8 +77,40 @@ func isRightBracket(line string) bool {
 }
 
 func parseRightBracket(line string) string {
-	re := `(.+[^delim])?\}(.+)?`
-	match := regexp.MustCompile(re).FindStringSubmatch(line)
+	var nLine string
+	re := `(.*)((\{)(.*))(\})(.*)`
+	matches := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return match[1] + "{rdelim}" + match[2]
+	if len(matches) == 7 {
+		// take first regex actions
+
+		if matches[1] != "" {
+			nLine = parseRightBracket(matches[1])
+		}
+
+		if matches[5] == "}" {
+			hasLeft := matches[3] == "{"
+
+			if hasLeft && strings.Contains(matches[4], "}") {
+				nLine += matches[2] + "{rdelim}"
+			} else {
+				nLine += matches[2] + matches[5]
+			}
+		}
+
+		return nLine + matches[6]
+	}
+
+	re = `(.*)(})(.*)`
+	matches = regexp.MustCompile(re).FindStringSubmatch(line)
+
+	if len(matches) != 4 {
+		return line
+	}
+
+	if matches[1] != "" {
+		nLine = parseRightBracket(matches[1])
+	}
+
+	return nLine + "{rdelim}" + matches[3]
 }

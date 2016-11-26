@@ -89,7 +89,7 @@ var expLeftBracket = []string{
 	"myObject: {ldelim} // random comment",
 	"let array = [{ldelim}",
 	"{ldelim}",
-	"calling({my: {ldelim}",
+	"calling({ldelim}my: {ldelim}",
 }
 
 var nonLeftBracket = []string{
@@ -155,7 +155,7 @@ var expRightBracket = []string{
 	`{rdelim}, { should`,
 	`be {rdelim}) good`,
 	`or {rdelim}] not?`,
-	`... maybe }] {rdelim}?`,
+	`... maybe {rdelim}] {rdelim}?`,
 	`{rdelim}, {ldelim}`,
 }
 
