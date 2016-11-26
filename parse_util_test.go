@@ -147,6 +147,8 @@ var rightBracket = []string{
 	`or }] not?`,
 	`... maybe }] }?`,
 	`}, {ldelim}`,
+	`}, maybe: ""}, did: "not"}, work: {"entirely"}`,
+	`}, maybe: ""}, did: "not"}, work: {"entir}ely"}`,
 }
 
 var expRightBracket = []string{
@@ -156,6 +158,8 @@ var expRightBracket = []string{
 	`or {rdelim}] not?`,
 	`... maybe {rdelim}] {rdelim}?`,
 	`{rdelim}, {ldelim}`,
+	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: {"entirely"}`,
+	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: {"entir}ely"{rdelim}`,
 }
 
 var nonRightBracket = []string{
