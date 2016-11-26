@@ -1,4 +1,13 @@
+<body>
+  {$some_variable}
+
+  Outside the script tag may be pure html or may not
+
 <script type="text/javascript">
+let myVar = {json_decode($jsonVariable)}
+let myOtherVar = '{$wuuuu}'
+console.log({include file=$myCustomFile})
+
 funcion () {ldelim}
   let some = 0
   const myObject = {ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim}
@@ -21,3 +30,4 @@ let array = [{ldelim}
 
 inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})
 </script>
+</body>
