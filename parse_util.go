@@ -122,3 +122,13 @@ func parseInlineObject(line string) (string, bool) {
 
 	return nLine + "{ldelim}" + matches[3] + "{rdelim}" + matches[5], true
 }
+
+// ------------ LDELIM
+
+func parseLDelim(line string) (string, bool) {
+	if !strings.Contains(line, "{ldelim}") {
+		return line, false
+	}
+
+	return strings.Replace(line, "{ldelim}", "{", -1), true
+}
