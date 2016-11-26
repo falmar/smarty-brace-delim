@@ -11,17 +11,15 @@ import (
 	"strings"
 )
 
-func createBackup(f *os.File) (string, error) {
-	var err error
-
-	_, err = f.Seek(0, 0)
-
+func createBackup(path, suffix string) (string, error) {
+	f, err := os.Open(path)
+	defer f.Close()
 	if err != nil {
 		return "", err
 	}
 
 	name := f.Name()
-	outputName := name[:strings.Index(name, ".tpl")] + "_backup" + ".tpl"
+	outputName := name[:strings.Index(name, ".tpl")] + suffix + ".tpl"
 
 	outputFile, err := os.Create(outputName)
 
@@ -30,15 +28,11 @@ func createBackup(f *os.File) (string, error) {
 	}
 	defer outputFile.Close()
 
-	reader := bufio.NewReader(f)
-	writer := bufio.NewWriter(outputFile)
-
-	var buf int
+	reader := bufio.NewReaderSize(f, 1024)
+	writer := bufio.NewWriterSize(outputFile, 1024)
 
 	for {
 		line, err := reader.ReadString('\n')
-
-		// fmt.Print(line)
 
 		if err == io.EOF {
 			break
@@ -46,15 +40,9 @@ func createBackup(f *os.File) (string, error) {
 			return "", err
 		}
 
-		n, err := writer.WriteString(line)
+		_, err = writer.WriteString(line)
 		if err != nil {
 			return "", err
-		}
-
-		buf += n
-
-		if buf > 1024 {
-			writer.Flush()
 		}
 	}
 

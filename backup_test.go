@@ -13,19 +13,18 @@ func TestBackup(t *testing.T) {
 	path := "files/simple_bracket.tpl"
 	expBackup := "files/simple_bracket_backup.tpl"
 
-	inputFile, err := os.Open(path)
-	defer inputFile.Close()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	backup, err := createBackup(inputFile)
+	backup, err := createBackup(path, "_backup")
 	if err != nil {
 		t.Fatalf("Error during backup: %s", err)
 	}
 
 	if backup != expBackup {
 		t.Fatalf("Expected backup name: %s; got : %s", expBackup, backup)
+	}
+
+	inputFile, err := os.Open(path)
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	backupFile, err := os.Open(backup)
