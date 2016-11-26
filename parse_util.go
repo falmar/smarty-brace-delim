@@ -114,3 +114,32 @@ func parseRightBracket(line string) (string, bool) {
 
 	return nLine + "{rdelim}" + matches[3], true
 }
+
+// ------------ INLINE OBJECT
+
+func parseInlineObject(line string) (string, bool) {
+	var nLine string
+	re := `(.*[\=\(\[]\s?)({)(\w+\s?:.+)(})(.*)`
+	matches := regexp.MustCompile(re).FindStringSubmatch(line)
+
+	if len(matches) == 6 {
+		if matches[3] != "" {
+			nLine, _ = parseInlineObject(matches[3])
+		}
+
+		return matches[1] + "{ldelim}" + nLine + "{rdelim}" + matches[5], true
+	}
+
+	re = `(.*)({)([\w]|[^\}\$]+\s?:.+)(})(.*)`
+	matches = regexp.MustCompile(re).FindStringSubmatch(line)
+
+	if len(matches) != 6 {
+		return line, false
+	}
+
+	if matches[1] != "" {
+		nLine, _ = parseInlineObject(matches[1])
+	}
+
+	return nLine + "{ldelim}" + matches[3] + "{rdelim}" + matches[5], true
+}
