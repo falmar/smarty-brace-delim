@@ -4,28 +4,18 @@
 
 package main
 
-import (
-	"fmt"
-	"regexp"
-)
+import "regexp"
 
 func startOfScriptTag(line string) bool {
-	// one line
-	re := `<script.+[^<\/script>]>.*[<](\/script>)?`
+	re := `<script(.+(<\/script>))?`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	if match != nil && len(match) == 2 && match[1] == "/script>" {
-		fmt.Println(match[1])
-		return false
-	}
-
-	// single line
-	return regexp.MustCompile(`<script.+[^<\/script>]>`).MatchString(line)
+	return match != nil && len(match) == 3 && match[2] != "</script>"
 }
 
 func endOfScriptTag(line string) bool {
-	re := `(<script)?.*<\/script>`
+	re := `((<script).+)?<\/script>`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return match != nil && len(match) == 2 && match[1] != "<script"
+	return match != nil && len(match) == 3 && match[2] != "<script"
 }
