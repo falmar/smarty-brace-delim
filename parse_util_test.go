@@ -72,7 +72,7 @@ func TestEndScriptTagNonTags(t *testing.T) {
 	}
 }
 
-// ------------ BRACKET LEFT
+// ------------ LEFT BRACKET
 
 var leftBracket = []string{
 	"function () {",
@@ -131,6 +131,75 @@ func TestIsNotLeftBracket(t *testing.T) {
 }
 
 func TestParseLeftBracket(t *testing.T) {
+	for i, line := range leftBracket {
+		nl := parseLeftBracket(line)
+		if nl != expLeftBracket[i] {
+			t.Fatalf("Expected bracket parsed %s; got: %s", expLeftBracket[i], nl)
+		}
+	}
+}
+
+// ------------ RIGHT BRACKET
+
+var rightBracket = []string{
+	`everthing }`,
+	`}, { should`,
+	`be }) good`,
+	`or }] not?`,
+	`... maybe }] }?`,
+}
+
+var expRightBracket = []string{
+	`everthing {rdelim}`,
+	`{rdelim}, { should`,
+	`be {rdelim}) good`,
+	`or {rdelim}] not?`,
+	`... maybe }] {rdelim}}?`,
+}
+
+var nonRightBracket = []string{
+	`<body>`,
+	`{$some_variable}`,
+	`Outside the script tag may be pure html or may not`,
+	`<script type="text/javascript">`,
+	`let myVar = {json_decode($jsonVariable)}`,
+	`let myOtherVar = '{$wuuuu}'`,
+	`console.log({include file=$myCustomFile})`,
+	`funcion () {`,
+	`const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}`,
+	`call({`,
+	`hello: "world"`,
+	`, {`,
+	`world: "hello"`,
+	`)`,
+	`let array = [{`,
+	`hello: "world",`,
+	`myObject:{`,
+	`one: 1,`,
+	`two: [2, 2] `,
+	`]`,
+	`inline_call({hello: "world", myObject:{one: 1, two: [2, 2]}})`,
+	`</script>`,
+	`</body>`,
+}
+
+func TestIsRightBracket(t *testing.T) {
+	for _, line := range leftBracket {
+		if !isLeftBracket(line) {
+			t.Fatalf("Should be left bracket %s", line)
+		}
+	}
+}
+
+func TestIsNotRightBracket(t *testing.T) {
+	for _, line := range nonLeftBracket {
+		if isLeftBracket(line) {
+			t.Fatalf("Should not be left bracket %s", line)
+		}
+	}
+}
+
+func TestParseRightBracket(t *testing.T) {
 	for i, line := range leftBracket {
 		nl := parseLeftBracket(line)
 		if nl != expLeftBracket[i] {
