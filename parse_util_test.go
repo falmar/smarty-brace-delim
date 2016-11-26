@@ -114,32 +114,26 @@ var nonLeftBracket = []string{
 	`</body>`,
 }
 
-func TestIsLeftBracket(t *testing.T) {
-	for _, line := range leftBracket {
-		if !isLeftBracket(line) {
-			t.Fatalf("Should be left bracket: %s", line)
-		}
-	}
-}
-
-func TestIsNotLeftBracket(t *testing.T) {
-	for _, line := range nonLeftBracket {
-		if isLeftBracket(line) {
-			t.Fatalf("Should not be left bracket: %s", line)
-		}
-	}
-}
-
-func TestParseLeftBracket(t *testing.T) {
+func TestParseLeftBracketMatch(t *testing.T) {
 	for i, line := range leftBracket {
 		nl, matched := parseLeftBracket(line)
 
 		if !matched {
-			t.Fatalf("Should parse")
+			t.Fatalf("Should match %s", line)
 		}
 
 		if nl != expLeftBracket[i] {
 			t.Fatalf("Expected bracket parsed: %s; got: %s", expLeftBracket[i], nl)
+		}
+	}
+}
+
+func TestParseLeftBracketNoMatch(t *testing.T) {
+	for _, line := range nonLeftBracket {
+		nl, matched := parseLeftBracket(line)
+
+		if matched && nl != line {
+			t.Fatalf("Should not match %s; %s", line, nl)
 		}
 	}
 }
@@ -173,7 +167,7 @@ var nonRightBracket = []string{
 	`let myOtherVar = '{$wuuuu}'`,
 	`console.log({include file=$myCustomFile})`,
 	`funcion () {`,
-	`const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}`,
+	`const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}`,
 	`call({`,
 	`hello: "world"`,
 	`, {`,
@@ -185,25 +179,9 @@ var nonRightBracket = []string{
 	`one: 1,`,
 	`two: [2, 2] `,
 	`]`,
-	`inline_call({hello: "world", myObject:{one: 1, two: [2, 2]}})`,
+	`inline_call({hello: "world", myObject:{one: 1, two: [2, 2]})`,
 	`</script>`,
 	`</body>`,
-}
-
-func TestIsRightBracket(t *testing.T) {
-	for _, line := range rightBracket {
-		if !isRightBracket(line) {
-			t.Fatalf("Should be left bracket: %s", line)
-		}
-	}
-}
-
-func TestIsNotRightBracket(t *testing.T) {
-	for _, line := range nonRightBracket {
-		if isRightBracket(line) {
-			t.Fatalf("Should not be left bracket: %s", line)
-		}
-	}
 }
 
 func TestParseRightBracket(t *testing.T) {
@@ -211,11 +189,21 @@ func TestParseRightBracket(t *testing.T) {
 		nl, matched := parseRightBracket(line)
 
 		if !matched {
-			t.Fatalf("Should parse")
+			t.Fatalf("Should match: %s", line)
 		}
 
 		if nl != expRightBracket[i] {
 			t.Fatalf("Expected bracket parsed: %s; got: %s", expRightBracket[i], nl)
+		}
+	}
+}
+
+func TestParseRightBracketNoMatch(t *testing.T) {
+	for _, line := range nonRightBracket {
+		nl, matched := parseRightBracket(line)
+
+		if matched && nl != line {
+			t.Fatalf("Should not match %s; %s", line, nl)
 		}
 	}
 }
