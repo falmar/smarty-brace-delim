@@ -64,3 +64,42 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 
 	return nil
 }
+
+// ----------------------- BRACKETS
+func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
+	reader := bufio.NewReaderSize(inputFile, 1024)
+	writer := bufio.NewWriterSize(outputFile, 1024)
+
+	var insideScriptTag bool
+
+	for {
+		line, err := reader.ReadString('\n')
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
+
+		if !insideScriptTag {
+			insideScriptTag = startOfScriptTag(line)
+		}
+
+		if !insideScriptTag {
+			writer.WriteString(line)
+			continue
+		}
+
+		line, _ = parseLDelim(line)
+		line, _ = parseRDelim(line)
+
+		if insideScriptTag {
+			insideScriptTag = !endOfScriptTag(line)
+		}
+
+		writer.WriteString(line)
+	}
+
+	writer.Flush()
+
+	return nil
+}
