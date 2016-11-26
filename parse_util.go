@@ -24,10 +24,16 @@ func endOfScriptTag(line string) bool {
 
 // ------------ LEFT BRACKET
 func isLeftBracket(line string) bool {
-	re := `\{(.*(\}))?`
-	match := regexp.MustCompile(re).FindStringSubmatch(line)
+	re := `(\{)(.*(\}))?`
+	matches := regexp.MustCompile(re).FindAllStringSubmatch(line, -1)
 
-	return match != nil && len(match) == 3 && match[2] != "}"
+	if matches == nil {
+		return false
+	}
+
+	match := matches[len(matches)-1]
+
+	return match != nil && len(match) == 4 && match[3] != "}"
 }
 
 func parseLeftBracket(line string) string {
@@ -46,7 +52,7 @@ func isRightBracket(line string) bool {
 }
 
 func parseRightBracket(line string) string {
-	re := `(.+)?\}(.+)?`
+	re := `(.+[^delim])?\}(.+)?`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	return match[1] + "{rdelim}" + match[2]

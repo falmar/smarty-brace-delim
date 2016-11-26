@@ -117,7 +117,7 @@ var nonLeftBracket = []string{
 func TestIsLeftBracket(t *testing.T) {
 	for _, line := range leftBracket {
 		if !isLeftBracket(line) {
-			t.Fatalf("Should be left bracket %s", line)
+			t.Fatalf("Should be left bracket: %s", line)
 		}
 	}
 }
@@ -125,7 +125,7 @@ func TestIsLeftBracket(t *testing.T) {
 func TestIsNotLeftBracket(t *testing.T) {
 	for _, line := range nonLeftBracket {
 		if isLeftBracket(line) {
-			t.Fatalf("Should not be left bracket %s", line)
+			t.Fatalf("Should not be left bracket: %s", line)
 		}
 	}
 }
@@ -134,7 +134,7 @@ func TestParseLeftBracket(t *testing.T) {
 	for i, line := range leftBracket {
 		nl := parseLeftBracket(line)
 		if nl != expLeftBracket[i] {
-			t.Fatalf("Expected bracket parsed %s; got: %s", expLeftBracket[i], nl)
+			t.Fatalf("Expected bracket parsed: %s; got: %s", expLeftBracket[i], nl)
 		}
 	}
 }
@@ -147,6 +147,7 @@ var rightBracket = []string{
 	`be }) good`,
 	`or }] not?`,
 	`... maybe }] }?`,
+	`}, {ldelim}`,
 }
 
 var expRightBracket = []string{
@@ -155,6 +156,7 @@ var expRightBracket = []string{
 	`be {rdelim}) good`,
 	`or {rdelim}] not?`,
 	`... maybe }] {rdelim}?`,
+	`{rdelim}, {ldelim}`,
 }
 
 var nonRightBracket = []string{
@@ -186,7 +188,7 @@ var nonRightBracket = []string{
 func TestIsRightBracket(t *testing.T) {
 	for _, line := range rightBracket {
 		if !isRightBracket(line) {
-			t.Fatalf("Should be left bracket %s", line)
+			t.Fatalf("Should be left bracket: %s", line)
 		}
 	}
 }
@@ -194,7 +196,7 @@ func TestIsRightBracket(t *testing.T) {
 func TestIsNotRightBracket(t *testing.T) {
 	for _, line := range nonRightBracket {
 		if isRightBracket(line) {
-			t.Fatalf("Should not be left bracket %s", line)
+			t.Fatalf("Should not be left bracket: %s", line)
 		}
 	}
 }
@@ -203,7 +205,7 @@ func TestParseRightBracket(t *testing.T) {
 	for i, line := range rightBracket {
 		nl := parseRightBracket(line)
 		if nl != expRightBracket[i] {
-			t.Fatalf("Expected bracket parsed %s; got: %s", expRightBracket[i], nl)
+			t.Fatalf("Expected bracket parsed: %s; got: %s", expRightBracket[i], nl)
 		}
 	}
 }
