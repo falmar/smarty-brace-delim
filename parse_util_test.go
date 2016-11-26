@@ -71,3 +71,51 @@ func TestEndScriptTagNonTags(t *testing.T) {
 		}
 	}
 }
+
+// ------------ BRACKET LEFT
+
+var leftBracket = []string{
+	"function () {",
+	"call({",
+	"myObject:{ // random comment",
+	"let array = [{",
+	"{",
+}
+
+var nonLeftBracket = []string{
+	`<body>`,
+	`{$some_variable}`,
+	`Outside the script tag may be pure html or may not`,
+	`<script type="text/javascript">`,
+	`let myVar = {json_decode($jsonVariable)}`,
+	`let myOtherVar = '{$wuuuu}'`,
+	`console.log({include file=$myCustomFile})`,
+	`const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}`,
+	`}`,
+	`hello: "world"`,
+	`world: "hello"`,
+	`})`,
+	`hello: "world",`,
+	`one: 1,`,
+	`two: [2, 2]`,
+	`}`,
+	`}]`,
+	`</script>`,
+	`</body>`,
+}
+
+func TestIsLeftBracket(t *testing.T) {
+	for _, line := range leftBracket {
+		if !isLeftBracket(line) {
+			t.Fatalf("Should be left bracket %s", line)
+		}
+	}
+}
+
+func TestIsNotLeftBracket(t *testing.T) {
+	for _, line := range nonLeftBracket {
+		if isLeftBracket(line) {
+			t.Fatalf("Should not be left bracket %s", line)
+		}
+	}
+}

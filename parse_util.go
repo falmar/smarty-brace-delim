@@ -6,6 +6,8 @@ package main
 
 import "regexp"
 
+// ------------ SCRIPT TAGS
+
 func startOfScriptTag(line string) bool {
 	re := `<script(.+(<\/script>))?`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
@@ -18,4 +20,17 @@ func endOfScriptTag(line string) bool {
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	return match != nil && len(match) == 3 && match[2] != "<script"
+}
+
+// ------------ BRACKET LEFT
+func isLeftBracket(line string) bool {
+	re := `\{(.*(\}))?`
+	match := regexp.MustCompile(re).FindStringSubmatch(line)
+
+	return match != nil && len(match) == 3 && match[2] != "}"
+}
+
+func parseLeftBracket(line string) string {
+
+	return ""
 }
