@@ -10,7 +10,7 @@ console.log({include file=$myCustomFile})
 const single = {}
 
 // this is not actually a {literal}
-funcion () {// this have {ldelim} ?
+funcion () {// this have ldelim: {ldelim} ?
   let some = 0
   const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}
 
@@ -28,7 +28,7 @@ let array = [{
   myObject:{
     one: 1,
     two: [2, 2]
-  } // this must be {rdelim}
+  } // this must be rdelim: {rdelim}
 }]
 
 {literal}
