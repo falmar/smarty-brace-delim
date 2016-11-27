@@ -106,10 +106,23 @@ var singleMultilineCommentStart = []string{
 	`function (){} /**  is comment`,
 }
 
+var singleMultilineCommentEnd = []string{
+	`*/ is comment`,
+	`function (){} */`,
+	`function (){} */  is comment`,
+}
+
+// ------------- Multiline Smarty
 var smartyMultilineCommentStart = []string{
 	`{* is comment`,
 	`function (){} {*`,
 	`function (){} {*  is comment`,
+}
+
+var smartyMultilineCommentEnd = []string{
+	`*} is comment`,
+	`function (){} *}`,
+	`function (){} *}  is comment`,
 }
 
 var nonMultilineCommentStart = []string{
@@ -126,12 +139,12 @@ var nonMultilineCommentStart = []string{
 	`r1 regex (.*)(['")])?[^\/'")]?\/(.*)[^\/'")]?\/(['")])?(.*)`,
 	`r2 regex (.*?[^\/]?)\/(.+)\/(.*)`,
 	`commen ml start (.*)\/\*\*(.*) end (.*)\*\/(.*)`,
-	`commen ml start (.*)\{\*(.*) end (.*)\*}(.*) smarty`,
+	`commen ml start (.*)\{\*(.*) end (.*)\*\}(.*) smarty`,
 	`line comment (.*)(\/\/.*) [1]check [2]append`,
 	`partial comment (.*)(\/\*.*\*\/)(.*) (.*)\/\*\*(.*(\*\*\/))(.*)`,
-	`* @author    David Lavieri (falmar) <daviddlavier@gmail.com>`,
-	`* @copyright 2016 David Lavieri`,
-	`* @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
+	`// @author    David Lavieri (falmar) <daviddlavier@gmail.com>`,
+	`// @copyright 2016 David Lavieri`,
+	`// @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
 func TestMultilineCommentStartSingleMatch(t *testing.T) {
@@ -160,8 +173,40 @@ func TestMultilineCommentStartSmartyMatch(t *testing.T) {
 
 func TestMultilineCommentStartSmartyNoMatch(t *testing.T) {
 	for _, l := range nonMultilineCommentStart {
-		if isMultilineCommentStart(l, false) {
+		if isMultilineCommentEnd(l, false) {
 			t.Fatalf("Should not match start multiline single comment %s", l)
+		}
+	}
+}
+
+func TestMultilineCommentEndSingleMatch(t *testing.T) {
+	for _, l := range singleMultilineCommentEnd {
+		if !isMultilineCommentEnd(l, true) {
+			t.Fatalf("Should match end multiline single comment %s", l)
+		}
+	}
+}
+
+func TestMultilineCommentEndSingleNoMatch(t *testing.T) {
+	for _, l := range nonMultilineCommentStart {
+		if isMultilineCommentStart(l, true) {
+			t.Fatalf("Should not match end multiline single comment %s", l)
+		}
+	}
+}
+
+func TestMultilineCommentEndSmartyMatch(t *testing.T) {
+	for _, l := range smartyMultilineCommentEnd {
+		if !isMultilineCommentEnd(l, false) {
+			t.Fatalf("Should match end multiline single comment %s", l)
+		}
+	}
+}
+
+func TestMultilineCommentEndSmartyNoMatch(t *testing.T) {
+	for _, l := range nonMultilineCommentStart {
+		if isMultilineCommentEnd(l, false) {
+			t.Fatalf("Should not match end multiline single comment %s", l)
 		}
 	}
 }
