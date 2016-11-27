@@ -7,6 +7,7 @@
 let myVar = {json_decode($jsonVariable)}
 let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
+const single = {}
 
 funcion () {
   let some = 0
