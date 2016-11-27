@@ -15,6 +15,8 @@ var leftBracket = []string{
 	"let array = [{",
 	"{",
 	"calling({my: {",
+	"const single = {}",
+	"{}",
 }
 
 var expLeftBracket = []string{
@@ -24,6 +26,8 @@ var expLeftBracket = []string{
 	"let array = [{ldelim}",
 	"{ldelim}",
 	"calling({ldelim}my: {ldelim}",
+	"const single = {ldelim}}",
+	"{ldelim}}",
 }
 
 var nonLeftBracket = []string{

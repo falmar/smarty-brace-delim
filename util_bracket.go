@@ -12,10 +12,10 @@ import (
 // ------------ LEFT BRACKET
 func parseLeftBracket(line string) (string, bool) {
 	var nLine string
-	re := `(.*)(\{)(.*(}))?(.*)`
+	re := `(.*)(\{)((.*)(}))?(.*)`
 	matches := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	if len(matches) != 6 {
+	if len(matches) != 7 {
 		return line, false
 	}
 
@@ -26,7 +26,10 @@ func parseLeftBracket(line string) (string, bool) {
 	var matchDelim bool
 
 	if matches[2] == "{" {
-		if matches[4] != "}" {
+		if matches[5] != "}" {
+			matchDelim = true
+			nLine += "{ldelim}"
+		} else if matches[5] == "}" && matches[4] == "" {
 			matchDelim = true
 			nLine += "{ldelim}"
 		}
@@ -36,7 +39,7 @@ func parseLeftBracket(line string) (string, bool) {
 		nLine += matches[2]
 	}
 
-	return nLine + matches[3] + matches[5], matchDelim
+	return nLine + matches[3] + matches[6], matchDelim
 }
 
 // ------------ RIGHT BRACKET
