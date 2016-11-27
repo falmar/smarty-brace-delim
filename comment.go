@@ -34,5 +34,5 @@ func parseLineComment(line string) ([]string, bool) {
 		return []string{nLine, rc}, true
 	}
 
-	return []string{nLine, matches[2]}, false
+	return []string{nLine, matches[2]}, true
 }

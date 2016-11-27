@@ -28,17 +28,6 @@ var expLineComments = [][]string{
 	[]string{`let some = 0 `, `// @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
 }
 
-var expMatchLineComments = []bool{
-	true,
-	true,
-	false,
-	true,
-	true,
-	true,
-	false,
-	true,
-}
-
 var nonLineComments = []string{
 	`<body>`,
 	`{$some_variable}`,
@@ -82,8 +71,8 @@ func TestLineCommentMatch(t *testing.T) {
 	for i, c := range lineComments {
 		left, match := parseLineComment(c)
 
-		if match != expMatchLineComments[i] {
-			t.Fatalf("Expected match %v; got: %v", expMatchLineComments[i], match)
+		if !match {
+			t.Fatalf("Expected match %s", c)
 		}
 
 		if left[0] != expLineComments[i][0] {
