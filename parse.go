@@ -15,6 +15,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 	writer := bufio.NewWriterSize(outputFile, 1024)
 
 	var insideScriptTag bool
+	var insideLiteralTag bool
 
 	for {
 		line, err := reader.ReadString('\n')
@@ -29,6 +30,16 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 		}
 
 		if !insideScriptTag {
+			writer.WriteString(line)
+			continue
+		}
+
+		if !insideLiteralTag {
+			insideLiteralTag = startOfLiteralTag(line)
+		}
+
+		if insideLiteralTag {
+			insideLiteralTag = !endOfLiteralTag(line)
 			writer.WriteString(line)
 			continue
 		}
@@ -71,6 +82,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 	writer := bufio.NewWriterSize(outputFile, 1024)
 
 	var insideScriptTag bool
+	var insideLiteralTag bool
 
 	for {
 		line, err := reader.ReadString('\n')
@@ -85,6 +97,16 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 		}
 
 		if !insideScriptTag {
+			writer.WriteString(line)
+			continue
+		}
+
+		if !insideLiteralTag {
+			insideLiteralTag = startOfLiteralTag(line)
+		}
+
+		if insideLiteralTag {
+			insideLiteralTag = !endOfLiteralTag(line)
 			writer.WriteString(line)
 			continue
 		}
