@@ -50,6 +50,22 @@ $.fn.serializeObject = function () {
 
 {/literal}
 
+// regexp none should be touched
+switch (key) {
+    case '_':
+        return exec(/^[0-9]{11}$/, value)
+    case '_':
+        return exec(/^[0-9]{2}$/, value)
+    case '_':
+        return exec(/^[a-zA-Z]{1,2}[0-9]{2,3}$/, value)
+    case '_':
+        return exec(/^[0-9]{7,10}$/, value)
+    case '_':
+        return exec(/^\w{6}$/, value)
+    default:
+        return false
+}
+
 const strangeObject = {maybe: {it: {wont: {work: "?"
 }, maybe: ""}, did: "not"}, work: "entirely"}
 

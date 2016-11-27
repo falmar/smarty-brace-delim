@@ -17,6 +17,31 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 	var insideScriptTag bool
 	var insideLiteralTag bool
 
+	parse := func(line string) string {
+		if line == "" {
+			return line
+		}
+
+		var matched bool
+
+		line, matched = parseInlineObject(line)
+		if matched {
+			line = line + "\n"
+		}
+
+		line, matched = parseLeftBracket(line)
+		if matched {
+			line = line + "\n"
+		}
+
+		line, matched = parseRightBracket(line)
+		if matched {
+			line = line + "\n"
+		}
+
+		return line
+	}
+
 	for {
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
@@ -44,24 +69,12 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 			continue
 		}
 
-		var matched bool
+		if isRegExp(line) {
+			slice, _ := parseRegExp(line)
 
-		line, matched = parseInlineObject(line)
-
-		if matched {
-			line = line + "\n"
-		}
-
-		line, matched = parseLeftBracket(line)
-
-		if matched {
-			line = line + "\n"
-		}
-
-		line, matched = parseRightBracket(line)
-
-		if matched {
-			line = line + "\n"
+			line = parse(slice[0]) + slice[1] + parse(slice[2]) + "\n"
+		} else {
+			line = parse(line)
 		}
 
 		if insideScriptTag {

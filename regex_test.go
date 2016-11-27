@@ -81,7 +81,7 @@ func TestIsRegExpNoMatch(t *testing.T) {
 	}
 }
 
-func TestRegExpSplit(t *testing.T) {
+func TestRegExpMatch(t *testing.T) {
 	for i, p := range regExpPatterns {
 
 		result, match := parseRegExp(p)
@@ -96,5 +96,15 @@ func TestRegExpSplit(t *testing.T) {
 			}
 		}
 
+	}
+}
+
+func TestRegExpNoMatch(t *testing.T) {
+	for _, p := range nonRegExpPatterns {
+		_, match := parseRegExp(p)
+
+		if match {
+			t.Fatalf("Should not match RegExp to be: %s", p)
+		}
 	}
 }
