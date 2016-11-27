@@ -87,6 +87,8 @@ var rightBracket = []string{
 	`}, {ldelim}`,
 	`}, maybe: ""}, did: "not"}, work: {"entirely"}`,
 	`}, maybe: ""}, did: "not"}, work: {"entir}ely"}`,
+	"const single = {}",
+	"{}",
 }
 
 var expRightBracket = []string{
@@ -98,6 +100,8 @@ var expRightBracket = []string{
 	`{rdelim}, {ldelim}`,
 	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: {"entirely"}`,
 	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: {"entir}ely"{rdelim}`,
+	"const single = {{rdelim}",
+	"{{rdelim}",
 }
 
 var nonRightBracket = []string{

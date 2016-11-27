@@ -57,8 +57,7 @@ func parseRightBracket(line string) (string, bool) {
 
 		if matches[5] == "}" {
 			hasLeft := matches[3] == "{"
-
-			if hasLeft && strings.Contains(matches[4], "}") {
+			if hasLeft && (strings.Contains(matches[4], "}") || matches[4] == "") {
 				nLine += matches[2] + "{rdelim}"
 			} else if hasLeft {
 				nLine += matches[2] + matches[5]
