@@ -113,6 +113,9 @@ var singleMultilineCommentEnd = []string{
 }
 
 var singleMultilineComment = []string{
+	`/** is comment`,
+	`function (){} /**`,
+	`function (){} /**  is comment`,
 	`function () { /** Copyright 2016 David Lavieri. /** All rights reserved.`,
 	`some code /** Use of this source code is governed by a MIT License`,
 	`/** License that can be found in the LICENSE file.`,
@@ -124,6 +127,9 @@ var singleMultilineComment = []string{
 }
 
 var expSingleMultilineComment = [][]string{
+	[]string{``, `/** is comment`},
+	[]string{`function (){} `, `/**`},
+	[]string{`function (){} `, `/**  is comment`},
 	[]string{`function () { `, `/** Copyright 2016 David Lavieri. /** All rights reserved.`},
 	[]string{`some code `, `/** Use of this source code is governed by a MIT License`},
 	[]string{``, `/** License that can be found in the LICENSE file.`},
@@ -139,15 +145,6 @@ var smartyMultilineCommentStart = []string{
 	`{* is comment`,
 	`function (){} {*`,
 	`function (){} {*  is comment`,
-}
-
-var smartyMultilineCommentEnd = []string{
-	`*} is comment`,
-	`function (){} *}`,
-	`function (){} *}  is comment`,
-}
-
-var smartyMultilineComment = []string{
 	`function () { {* Copyright 2016 David Lavieri. All rights reserved.`,
 	`some code {* Use of this source code is governed by a MIT License`,
 	`{* License that can be found in the LICENSE file.`,
@@ -158,7 +155,10 @@ var smartyMultilineComment = []string{
 	`let some = 0 {* @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
-var expSmartyMultilineComment = [][]string{
+var expSmartyMultilineCommentStart = [][]string{
+	[]string{``, `{* is comment`},
+	[]string{`function (){} `, `{*`},
+	[]string{`function (){} `, `{*  is comment`},
 	[]string{`function () { `, `{* Copyright 2016 David Lavieri. All rights reserved.`},
 	[]string{`some code `, `{* Use of this source code is governed by a MIT License`},
 	[]string{``, `{* License that can be found in the LICENSE file.`},
@@ -167,6 +167,20 @@ var expSmartyMultilineComment = [][]string{
 	[]string{`</script> `, `{* @author    David Lavieri (falmar) <daviddlavier@gmail.com>`},
 	[]string{``, `{* @copyright 2016 David Lavieri`},
 	[]string{`let some = 0 `, `{* @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
+}
+
+var smartyMultilineCommentEnd = []string{
+	`*} is comment`,
+	`function (){} *}`,
+	`function (){} *}  is comment`,
+	`function () { *} Copyright 2016 David Lavieri. All rights reserved.`,
+	`some code *} Use of this source code is governed by a MIT License`,
+	`*} License that can be found in the LICENSE file.`,
+	`<script type="text/javascript"> *} Date: 0/0/0`,
+	`console.log({include*} file=$myCustomFile}) *} Time: 0:0 PM`,
+	`</script> *} @author    David Lavieri (falmar) <daviddlavier@gmail.com>`,
+	`*} @copyright 2016 David Lavieri`,
+	`let some = 0 *} @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
 var nonMultilineCommentStart = []string{
@@ -290,19 +304,19 @@ func TestIsMultilineCommentEndSmartyNoMatch(t *testing.T) {
 }
 
 func TestParseMultilineCommentSmartyStartMatch(t *testing.T) {
-	for i, c := range smartyMultilineComment {
+	for i, c := range smartyMultilineCommentStart {
 		left, match := parseMultilineCommentStart(c, false)
 
 		if !match {
 			t.Fatalf("Expected match %s", c)
 		}
 
-		if left[0] != expSmartyMultilineComment[i][0] {
-			t.Fatalf("Expected left most parse: %s; got: %s", expSmartyMultilineComment[i][0], left[0])
+		if left[0] != expSmartyMultilineCommentStart[i][0] {
+			t.Fatalf("Expected left most parse: %s; got: %s", expSmartyMultilineCommentStart[i][0], left[0])
 		}
 
-		if left[1] != expSmartyMultilineComment[i][1] {
-			t.Fatalf("Expected right most parse: %s; got: %s", expSmartyMultilineComment[i][1], left[1])
+		if left[1] != expSmartyMultilineCommentStart[i][1] {
+			t.Fatalf("Expected right most parse: %s; got: %s", expSmartyMultilineCommentStart[i][1], left[1])
 		}
 	}
 }
