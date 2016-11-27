@@ -17,32 +17,34 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 	var insideScriptTag bool
 	var insideLiteralTag bool
 
-	parse := func(line string) string {
+	parse := func(line string, lf bool) string {
 		if line == "" {
 			return line
 		}
 
+		var anyMatched bool
 		var matched bool
 
 		line, matched = parseInlineObject(line)
-		if matched {
-			line = line + "\n"
-		}
+		anyMatched = anyMatched || matched
 
 		line, matched = parseLeftBracket(line)
-		if matched {
-			line = line + "\n"
-		}
+		anyMatched = anyMatched || matched
 
 		line, matched = parseRightBracket(line)
-		if matched {
-			line = line + "\n"
+		anyMatched = anyMatched || matched
+
+		if anyMatched && lf {
+			line += "\n"
 		}
 
 		return line
 	}
 
 	for {
+		var isCommentLine bool
+		var comment string
+
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			break
@@ -59,29 +61,40 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 			continue
 		}
 
+		cm, isCommentLine := parseCommentLine(line)
+
+		if isCommentLine {
+			line = cm[0]
+			comment = cm[1] + "\n"
+		}
+
 		if !insideLiteralTag {
 			insideLiteralTag = startOfLiteralTag(line)
 		}
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(line)
+			writer.WriteString(line + comment)
 			continue
 		}
 
 		if isRegExp(line) {
 			slice, _ := parseRegExp(line)
 
-			line = parse(slice[0]) + slice[1] + parse(slice[2]) + "\n"
+			line = parse(slice[0], false) + slice[1] + parse(slice[2], false)
+
+			if !isCommentLine {
+				line += "\n"
+			}
 		} else {
-			line = parse(line)
+			line = parse(line, !isCommentLine)
 		}
 
 		if insideScriptTag {
 			insideScriptTag = !endOfScriptTag(line)
 		}
 
-		writer.WriteString(line)
+		writer.WriteString(line + comment)
 	}
 
 	writer.Flush()
@@ -98,6 +111,9 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 	var insideLiteralTag bool
 
 	for {
+		var isCommentLine bool
+		var comment string
+
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			break
@@ -114,13 +130,20 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			continue
 		}
 
+		cm, isCommentLine := parseCommentLine(line)
+
+		if isCommentLine {
+			line = cm[0]
+			comment = cm[1] + "\n"
+		}
+
 		if !insideLiteralTag {
 			insideLiteralTag = startOfLiteralTag(line)
 		}
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(line)
+			writer.WriteString(line + comment)
 			continue
 		}
 
@@ -131,7 +154,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			insideScriptTag = !endOfScriptTag(line)
 		}
 
-		writer.WriteString(line)
+		writer.WriteString(line + comment)
 	}
 
 	writer.Flush()
