@@ -12,11 +12,24 @@ var regExpPatterns = []string{
 	`return exec(/^[a-zA-Z]{1,2}[0-9]{2,3}$/, value)`,
 	`return exec(/^[0-9]{7,10}$/, value)`,
 	`return exec(/^\w{6}$/, value)`,
-	`/^[0-9]{11}$/`,
-	`/^[0-9]{2}$/`,
-	`/^[a-zA-Z]{1,2}[0-9]{2,3}$/`,
-	`/^[0-9]{7,10}$/`,
-	`/^\w{6}$/`,
+	`r2 regex /(.*?[^\/])\/(.+)\/(.*)/`,
+	`commen ml start /(.*)\/\*\*(.*) (.*)\*\/(.*)/`,
+	`commen ml start /(.*)\{\*\*(.*) (.*)\*}(.*)/ smarty`,
+	`line comment /(.*)(\/\/.*)/ [1]check [2]append`,
+	`partial comment /(.*)(\/\*.*\*\/)(.*)/`,
+}
+
+var expectRegExpPatterns = [][]string{
+	[]string{`return exec(`, `/^[0-9]{11}$/`, `, value)`},
+	[]string{`return exec(`, `/^[0-9]{2}$/`, `, value)`},
+	[]string{`return exec(`, `/^[a-zA-Z]{1,2}[0-9]{2,3}$/`, `, value)`},
+	[]string{`return exec(`, `/^[0-9]{7,10}$/`, `, value)`},
+	[]string{`return exec(`, `/^\w{6}$/`, `, value)`},
+	[]string{`r2 regex `, `/(.*?[^\/])\/(.+)\/(.*)/`, ``},
+	[]string{`commen ml start `, `/(.*)\/\*\*(.*) (.*)\*\/(.*)/`, ``},
+	[]string{`commen ml start `, `/(.*)\{\*\*(.*) (.*)\*}(.*)/`, ` smarty`},
+	[]string{`line comment `, `/(.*)(\/\/.*)/`, ` [1]check [2]append`},
+	[]string{`partial comment `, `/(.*)(\/\*.*\*\/)(.*)/`, ``},
 }
 
 var nonRegExpPatterns = []string{
@@ -65,5 +78,23 @@ func TestIsRegExpNoMatch(t *testing.T) {
 		if isRegExp(p) {
 			t.Fatalf("Should not be a RegExp Pattern %s", p)
 		}
+	}
+}
+
+func TestRegExpSplit(t *testing.T) {
+	for i, p := range regExpPatterns {
+
+		result, match := parseRegExp(p)
+
+		if !match {
+			t.Fatalf("Should match RegExp to be: %s", p)
+		}
+
+		for z, ep := range expectRegExpPatterns[i] {
+			if ep != result[z] {
+				t.Fatalf("Expected RegExp to be: %s; got: %s", ep, result[z])
+			}
+		}
+
 	}
 }
