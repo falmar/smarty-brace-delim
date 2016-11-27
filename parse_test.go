@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestParseBracket(t *testing.T) {
+func TestParseFileBracket(t *testing.T) {
 	input := "files/simple_bracket.tpl"
 	output := "files/simple_bracket_parsed.tpl"
 	exp := "files/simple_delim.tpl"
@@ -88,7 +88,7 @@ func TestParseBracket(t *testing.T) {
 	}
 }
 
-func TestParseDelim(t *testing.T) {
+func TestParseFileDelim(t *testing.T) {
 	input := "files/simple_delim.tpl"
 	output := "files/simple_delim_parsed.tpl"
 	exp := "files/simple_bracket.tpl"
