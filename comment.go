@@ -36,3 +36,25 @@ func parseCommentLine(line string) ([]string, bool) {
 
 	return []string{nLine, matches[2]}, true
 }
+
+// -------------- single Multiline
+
+func isMultilineCommentStart(line string, single bool) bool {
+	p := `(.*)\/\*\*(.*)`
+
+	if !single {
+		p = `(.*)\{\*(.*)`
+	}
+
+	return regexp.MustCompile(p).MatchString(line)
+}
+
+func isMultilineCommentEnd(line string, single bool) bool {
+	p := `(.*)\*\/(.*)`
+
+	if !single {
+		p = `(.*)\*\}(.*)`
+	}
+
+	return regexp.MustCompile(p).MatchString(line)
+}
