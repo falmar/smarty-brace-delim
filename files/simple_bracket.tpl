@@ -9,11 +9,13 @@ let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
 const single = {}
 
-funcion () {
+// this is not actually a {literal}
+funcion () {// this have {ldelim} ?
   let some = 0
   const myObject = {hello: "world", myObject:{one: 1, two: [2, 2]}}
 
 }
+// of course not the end of {/literal}
 
 call({
   hello: "world"
@@ -26,7 +28,7 @@ let array = [{
   myObject:{
     one: 1,
     two: [2, 2]
-  }
+  } // this must be {rdelim}
 }]
 
 {literal}
@@ -50,7 +52,7 @@ $.fn.serializeObject = function () {
 
 {/literal}
 
-// regexp none should be touched
+// regexp none should be touched {$extra_regexp_pattern}
 switch (key) {
     case '_':
         return exec(/^[0-9]{11}$/, value)
@@ -61,13 +63,15 @@ switch (key) {
     case '_':
         return exec(/^[0-9]{7,10}$/, value)
     case '_':
-        return exec(/^\w{6}$/, value)
+        return exec(/{$extra_regexp_pattern}/, value) // untouched
     default:
         return false
 }
 
+// this {object has { lots and lots for brackets {
 const strangeObject = {maybe: {it: {wont: {work: "?"
 }, maybe: ""}, did: "not"}, work: "entirely"}
+// but } it should not} be affected at all }
 
 inline_call({hello: "world", myObject:{one: 1, two: [2, 2]}})
 </script>

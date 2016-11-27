@@ -9,11 +9,13 @@ let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
 const single = {ldelim}{rdelim}
 
-funcion () {ldelim}
+// this is not actually a {literal}
+funcion () {ldelim}// this have ldelim: {ldelim} ?
   let some = 0
   const myObject = {ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim}
 
 {rdelim}
+// of course not the end of {/literal}
 
 call({ldelim}
   hello: "world"
@@ -26,7 +28,7 @@ let array = [{ldelim}
   myObject:{ldelim}
     one: 1,
     two: [2, 2]
-  {rdelim}
+  {rdelim} // this must be rdelim: {rdelim}
 {rdelim}]
 
 {literal}
@@ -50,7 +52,7 @@ $.fn.serializeObject = function () {
 
 {/literal}
 
-// regexp none should be touched
+// regexp none should be touched {$extra_regexp_pattern}
 switch (key) {ldelim}
     case '_':
         return exec(/^[0-9]{11}$/, value)
@@ -61,13 +63,15 @@ switch (key) {ldelim}
     case '_':
         return exec(/^[0-9]{7,10}$/, value)
     case '_':
-        return exec(/^\w{6}$/, value)
+        return exec(/{$extra_regexp_pattern}/, value) // untouched
     default:
         return false
 {rdelim}
 
+// this {object has { lots and lots for brackets {
 const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"
 {rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}
+// but } it should not} be affected at all }
 
 inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})
 </script>
