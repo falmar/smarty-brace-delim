@@ -104,18 +104,6 @@ var singleMultilineCommentStart = []string{
 	`/** is comment`,
 	`function (){} /**`,
 	`function (){} /**  is comment`,
-}
-
-var singleMultilineCommentEnd = []string{
-	`*/ is comment`,
-	`function (){} */`,
-	`function (){} */  is comment`,
-}
-
-var singleMultilineComment = []string{
-	`/** is comment`,
-	`function (){} /**`,
-	`function (){} /**  is comment`,
 	`function () { /** Copyright 2016 David Lavieri. /** All rights reserved.`,
 	`some code /** Use of this source code is governed by a MIT License`,
 	`/** License that can be found in the LICENSE file.`,
@@ -126,7 +114,7 @@ var singleMultilineComment = []string{
 	`let some = 0 /** @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
-var expSingleMultilineComment = [][]string{
+var expSingleMultilineCommentStart = [][]string{
 	[]string{``, `/** is comment`},
 	[]string{`function (){} `, `/**`},
 	[]string{`function (){} `, `/**  is comment`},
@@ -138,6 +126,34 @@ var expSingleMultilineComment = [][]string{
 	[]string{`</script> `, `/** @author    David Lavieri (falmar) <daviddlavier@gmail.com>`},
 	[]string{``, `/** @copyright 2016 David Lavieri`},
 	[]string{`let some = 0 `, `/** @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
+}
+
+var singleMultilineCommentEnd = []string{
+	`*/ is comment`,
+	`function (){} */`,
+	`function (){} */  is comment`,
+	`function () { */ Copyright 2016 David Lavieri. */ All rights reserved.`,
+	`some code */ Use of this source code is governed by a MIT License`,
+	`*/ License that can be found in the LICENSE file.`,
+	`<script type="text/javascript"> */ Date: 0/0/0`,
+	`console.log({include*/ file=$myCustomFile}) */ Time: 0:0 PM`,
+	`</script> */ @author    David Lavieri (falmar) <daviddlavier@gmail.com>`,
+	`*/ @copyright 2016 David Lavieri`,
+	`let some = 0 */ @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
+}
+
+var expSingleMultilineCommentEnd = [][]string{
+	[]string{`*/`, ` is comment`},
+	[]string{`function (){} */`, ``},
+	[]string{`function (){} */`, `  is comment`},
+	[]string{`function () { */ Copyright 2016 David Lavieri. */`, ` All rights reserved.`},
+	[]string{`some code */`, ` Use of this source code is governed by a MIT License`},
+	[]string{`*/`, ` License that can be found in the LICENSE file.`},
+	[]string{`<script type="text/javascript"> */`, ` Date: 0/0/0`},
+	[]string{`console.log({include*/ file=$myCustomFile}) */`, ` Time: 0:0 PM`},
+	[]string{`</script> */`, ` @author    David Lavieri (falmar) <daviddlavier@gmail.com>`},
+	[]string{`*/`, ` @copyright 2016 David Lavieri`},
+	[]string{`let some = 0 */`, ` @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
 }
 
 // ------------- Multiline Smarty
@@ -183,7 +199,21 @@ var smartyMultilineCommentEnd = []string{
 	`let some = 0 *} @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
-var nonMultilineCommentStart = []string{
+var expSmartyMultilineCommentEnd = [][]string{
+	[]string{`*}`, ` is comment`},
+	[]string{`function (){} *}`, ``},
+	[]string{`function (){} *}`, `  is comment`},
+	[]string{`function () { *}`, ` Copyright 2016 David Lavieri. All rights reserved.`},
+	[]string{`some code *}`, ` Use of this source code is governed by a MIT License`},
+	[]string{`*}`, ` License that can be found in the LICENSE file.`},
+	[]string{`<script type="text/javascript"> *}`, ` Date: 0/0/0`},
+	[]string{`console.log({include*} file=$myCustomFile}) *}`, ` Time: 0:0 PM`},
+	[]string{`</script> *}`, ` @author    David Lavieri (falmar) <daviddlavier@gmail.com>`},
+	[]string{`*}`, ` @copyright 2016 David Lavieri`},
+	[]string{`let some = 0 *}`, ` @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
+}
+
+var nonMultilineComment = []string{
 	`/* /*_* /*\s* /*-* /*text* is comment`,
 	`function (){} /* /*_* /*\s* /*-* /*text*`,
 	`{ * {_* {\s* {-* is comment *{`,
@@ -215,7 +245,7 @@ func TestIsMultilineCommentStartSingleMatch(t *testing.T) {
 }
 
 func TestIsMultilineCommentStartSingleNoMatch(t *testing.T) {
-	for _, l := range nonMultilineCommentStart {
+	for _, l := range nonMultilineComment {
 		if isMultilineCommentStart(l, true) {
 			t.Fatalf("Should not match start multiline single comment %s", l)
 		}
@@ -231,7 +261,7 @@ func TestIsMultilineCommentEndSingleMatch(t *testing.T) {
 }
 
 func TestIsMultilineCommentEndSingleNoMatch(t *testing.T) {
-	for _, l := range nonMultilineCommentStart {
+	for _, l := range nonMultilineComment {
 		if isMultilineCommentStart(l, true) {
 			t.Fatalf("Should not match end multiline single comment %s", l)
 		}
@@ -239,19 +269,19 @@ func TestIsMultilineCommentEndSingleNoMatch(t *testing.T) {
 }
 
 func TestParseMultilineCommentSingleStartMatch(t *testing.T) {
-	for i, c := range singleMultilineComment {
+	for i, c := range singleMultilineCommentStart {
 		left, match := parseMultilineCommentStart(c, true)
 
 		if !match {
 			t.Fatalf("Expected match %s", c)
 		}
 
-		if left[0] != expSingleMultilineComment[i][0] {
-			t.Fatalf("Expected left most parse: %s; got: %s", expSingleMultilineComment[i][0], left[0])
+		if left[0] != expSingleMultilineCommentStart[i][0] {
+			t.Fatalf("Expected left most parse: %s; got: %s", expSingleMultilineCommentStart[i][0], left[0])
 		}
 
-		if left[1] != expSingleMultilineComment[i][1] {
-			t.Fatalf("Expected right most parse: %s; got: %s", expSingleMultilineComment[i][1], left[1])
+		if left[1] != expSingleMultilineCommentStart[i][1] {
+			t.Fatalf("Expected right most parse: %s; got: %s", expSingleMultilineCommentStart[i][1], left[1])
 		}
 	}
 }
@@ -259,6 +289,38 @@ func TestParseMultilineCommentSingleStartMatch(t *testing.T) {
 func TestParseMultilineCommentSingleStartNoMatch(t *testing.T) {
 	for _, c := range nonCommentLines {
 		left, match := parseMultilineCommentStart(c, true)
+
+		if match {
+			t.Fatal("Expected no match")
+		}
+
+		if left[1] != c {
+			t.Fatalf("Expected left most be intact: %s; got: %s", c, left[1])
+		}
+	}
+}
+
+func TestParseMultilineCommentSingleEndMatch(t *testing.T) {
+	for i, c := range singleMultilineCommentEnd {
+		left, match := parseMultilineCommentEnd(c, true)
+
+		if !match {
+			t.Fatalf("Expected match %s", c)
+		}
+
+		if left[0] != expSingleMultilineCommentEnd[i][0] {
+			t.Fatalf("Expected left most parse: %s; got: %s", expSingleMultilineCommentEnd[i][0], left[0])
+		}
+
+		if left[1] != expSingleMultilineCommentEnd[i][1] {
+			t.Fatalf("Expected right most parse: %s; got: %s", expSingleMultilineCommentEnd[i][1], left[1])
+		}
+	}
+}
+
+func TestParseMultilineCommentSingleEndNoMatch(t *testing.T) {
+	for _, c := range nonCommentLines {
+		left, match := parseMultilineCommentEnd(c, true)
 
 		if match {
 			t.Fatal("Expected no match")
@@ -280,7 +342,7 @@ func TestIsMultilineCommentStartSmartyMatch(t *testing.T) {
 }
 
 func TestIsMultilineCommentStartSmartyNoMatch(t *testing.T) {
-	for _, l := range nonMultilineCommentStart {
+	for _, l := range nonMultilineComment {
 		if isMultilineCommentEnd(l, false) {
 			t.Fatalf("Should not match start multiline single comment %s", l)
 		}
@@ -296,7 +358,7 @@ func TestIsMultilineCommentEndSmartyMatch(t *testing.T) {
 }
 
 func TestIsMultilineCommentEndSmartyNoMatch(t *testing.T) {
-	for _, l := range nonMultilineCommentStart {
+	for _, l := range nonMultilineComment {
 		if isMultilineCommentEnd(l, false) {
 			t.Fatalf("Should not match end multiline single comment %s", l)
 		}
@@ -324,6 +386,38 @@ func TestParseMultilineCommentSmartyStartMatch(t *testing.T) {
 func TestParseMultilineCommentSmartyStartNoMatch(t *testing.T) {
 	for _, c := range nonCommentLines {
 		left, match := parseMultilineCommentStart(c, false)
+
+		if match {
+			t.Fatal("Expected no match")
+		}
+
+		if left[1] != c {
+			t.Fatalf("Expected left most be intact: %s; got: %s", c, left[1])
+		}
+	}
+}
+
+func TestParseMultilineCommentSmartyEndMatch(t *testing.T) {
+	for i, c := range smartyMultilineCommentEnd {
+		left, match := parseMultilineCommentEnd(c, false)
+
+		if !match {
+			t.Fatalf("Expected match %s", c)
+		}
+
+		if left[0] != expSmartyMultilineCommentEnd[i][0] {
+			t.Fatalf("Expected left most parse: %s; got: %s", expSmartyMultilineCommentEnd[i][0], left[0])
+		}
+
+		if left[1] != expSmartyMultilineCommentEnd[i][1] {
+			t.Fatalf("Expected right most parse: %s; got: %s", expSmartyMultilineCommentEnd[i][1], left[1])
+		}
+	}
+}
+
+func TestParseMultilineCommentSmartyEndNoMatch(t *testing.T) {
+	for _, c := range nonCommentLines {
+		left, match := parseMultilineCommentEnd(c, false)
 
 		if match {
 			t.Fatal("Expected no match")
