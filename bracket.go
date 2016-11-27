@@ -12,7 +12,7 @@ import (
 // ------------ LEFT BRACKET
 func parseLeftBracket(line string) (string, bool) {
 	var nLine string
-	re := `(.*)(\{)((.*)(}))?(.*)`
+	re := `(.*)(\{)((.*)(\}))?(.*)`
 	matches := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	if len(matches) != 7 {
