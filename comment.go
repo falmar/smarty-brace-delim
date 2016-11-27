@@ -6,11 +6,11 @@ package main
 
 import "regexp"
 
-func isLineComment(line string) bool {
+func isCommentLine(line string) bool {
 	return regexp.MustCompile(`(.*)\/\/(.*)`).MatchString(line)
 }
 
-func parseLineComment(line string) ([]string, bool) {
+func parseCommentLine(line string) ([]string, bool) {
 	var nLine string
 	var rc string
 	re := regexp.MustCompile(`(.*)(\/\/.*)`)
@@ -21,7 +21,7 @@ func parseLineComment(line string) ([]string, bool) {
 	}
 
 	if matches[1] != "" {
-		lMatches, matched := parseLineComment(matches[1])
+		lMatches, matched := parseCommentLine(matches[1])
 
 		nLine = lMatches[1]
 		rc = matches[2]

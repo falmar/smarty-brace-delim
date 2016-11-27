@@ -6,7 +6,7 @@ package main
 
 import "testing"
 
-var lineComments = []string{
+var commentLines = []string{
 	`function () { // Copyright 2016 David Lavieri. All rights reserved.`,
 	`some code // Use of this source code is governed by a MIT License`,
 	`// License that can be found in the LICENSE file.`,
@@ -17,7 +17,7 @@ var lineComments = []string{
 	`let some = 0 // @license   http://opensource.org/licenses/MIT The MIT License (MIT)`,
 }
 
-var expLineComments = [][]string{
+var expCommentLines = [][]string{
 	[]string{`function () { `, `// Copyright 2016 David Lavieri. All rights reserved.`},
 	[]string{`some code `, `// Use of this source code is governed by a MIT License`},
 	[]string{``, `// License that can be found in the LICENSE file.`},
@@ -28,7 +28,7 @@ var expLineComments = [][]string{
 	[]string{`let some = 0 `, `// @license   http://opensource.org/licenses/MIT The MIT License (MIT)`},
 }
 
-var nonLineComments = []string{
+var nonCommentLines = []string{
 	`<body>`,
 	`{$some_variable}`,
 	`Outside the script tag may be pure html or may not`,
@@ -51,43 +51,43 @@ var nonLineComments = []string{
 	`</body>`,
 }
 
-func TestIsLineCommentMatch(t *testing.T) {
-	for _, c := range lineComments {
-		if !isLineComment(c) {
+func TestIsCommentLineMatch(t *testing.T) {
+	for _, c := range commentLines {
+		if !isCommentLine(c) {
 			t.Fatalf("Should be/have a line comment %s", c)
 		}
 	}
 }
 
-func TestIsLineCommentNoMatch(t *testing.T) {
-	for _, c := range nonLineComments {
-		if isLineComment(c) {
+func TestIsCommentLineNoMatch(t *testing.T) {
+	for _, c := range nonCommentLines {
+		if isCommentLine(c) {
 			t.Fatalf("Should not be/have a line comment %s", c)
 		}
 	}
 }
 
-func TestLineCommentMatch(t *testing.T) {
-	for i, c := range lineComments {
-		left, match := parseLineComment(c)
+func TestCommentLineMatch(t *testing.T) {
+	for i, c := range commentLines {
+		left, match := parseCommentLine(c)
 
 		if !match {
 			t.Fatalf("Expected match %s", c)
 		}
 
-		if left[0] != expLineComments[i][0] {
-			t.Fatalf("Expected left most parse: %s; got: %s", expLineComments[i][0], left[0])
+		if left[0] != expCommentLines[i][0] {
+			t.Fatalf("Expected left most parse: %s; got: %s", expCommentLines[i][0], left[0])
 		}
 
-		if left[1] != expLineComments[i][1] {
-			t.Fatalf("Expected right most parse: %s; got: %s", expLineComments[i][1], left[1])
+		if left[1] != expCommentLines[i][1] {
+			t.Fatalf("Expected right most parse: %s; got: %s", expCommentLines[i][1], left[1])
 		}
 	}
 }
 
-func TestLineCommentNoMatch(t *testing.T) {
-	for _, c := range nonLineComments {
-		left, match := parseLineComment(c)
+func TestCommentLineNoMatch(t *testing.T) {
+	for _, c := range nonCommentLines {
+		left, match := parseCommentLine(c)
 
 		if match {
 			t.Fatal("Expected no match")
