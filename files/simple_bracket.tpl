@@ -32,7 +32,27 @@ let array = [{
 }]
 
 {literal}
+$.fn.serializeObject = function () {
+  var o = {}
+  var a = this.serializeArray()
+  $.each(a, function () {
+    if (o[this.name] !== undefined) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]]
+      }
+      o[this.name].push(this.value || '')
+    } else {
+      o[this.name] = this.value || ''
+    }
+  })
 
+  return o
+}
+{/literal}
+
+function () {/**
+Everything inside
+multiline comment must not be parsed!
 $.fn.serializeObject = function () {
   var o = {}
   var a = this.serializeArray()
@@ -50,7 +70,19 @@ $.fn.serializeObject = function () {
   return o
 }
 
-{/literal}
+const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"
+{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}
+*/}
+
+({[{{*
+const strangeObject = {maybe: {it: {wont: {work: "?"
+}, maybe: ""}, did: "not"}, work: "entirely"}
+call({ldelim}
+  hello: "world"
+{rdelim}, {ldelim}
+  world: "hello"
+{rdelim})
+*}}]})
 
 // regexp none should be touched {$extra_regexp_pattern}
 switch (key) {
