@@ -227,8 +227,15 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			continue
 		}
 
-		line, _ = parseLDelim(line)
-		line, _ = parseRDelim(line)
+		line, _, split := parseLDelim(line)
+		if split {
+			line = line + "\n"
+		}
+
+		line, _, split = parseRDelim(line)
+		if split {
+			line = line + "\n"
+		}
 
 		if insideScriptTag {
 			insideScriptTag = !endOfScriptTag(line)
