@@ -15,7 +15,7 @@ var lDelims = []string{
 	`{rdelim}, {ldelim}`,
 	`let array = [{ldelim}`,
 	`myObject:{ldelim}`,
-	`const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"`,
+	`const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: "{ldelim}work: ?"`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})`,
 }
 
@@ -26,7 +26,7 @@ var expLDelims = []string{
 	`{rdelim}, {`,
 	`let array = [{`,
 	`myObject:{`,
-	`const strangeObject = {maybe: {it: {wont: {work: "?"`,
+	`const strangeObject = {maybe: {it: {wont: "{ldelim}work: ?"`,
 	`inline_call({hello: "world", myObject:{one: 1, two: [2, 2]{rdelim}{rdelim})`,
 }
 
@@ -51,11 +51,17 @@ var nonLDelims = []string{
 	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}`,
 	`</script>`,
 	`</body>`,
+	`{rdelim}, "{ldelim}"`,
+	`{rdelim}, '{ldelim}'`,
+	"{rdelim}, `{ldelim}`",
+	`console.log('{rdelim}')`,
+	`console.log("{ldelim}")`,
+	"object.call('{rdelim}', \"{ldelim}\", `{ldelim} & {rdelim}`)",
 }
 
 func TestParseLDelimMatch(t *testing.T) {
 	for i, line := range lDelims {
-		nl, matched := parseLDelim(line)
+		nl, matched, _ := parseLDelim(line)
 
 		if !matched {
 			t.Fatalf("Should parse: %s", line)
@@ -69,7 +75,7 @@ func TestParseLDelimMatch(t *testing.T) {
 
 func TestParseLDelimNotMatch(t *testing.T) {
 	for _, line := range nonLDelims {
-		nl, matched := parseLDelim(line)
+		nl, matched, _ := parseLDelim(line)
 
 		if matched || nl != line {
 			t.Fatalf("Should not match or perform change on string: %s", line)
@@ -86,7 +92,7 @@ var rDelims = []string{
 	`{rdelim})`,
 	`{rdelim}`,
 	`{rdelim}]`,
-	`{rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}`,
+	`{rdelim}, maybe: ""{rdelim}, did: "{rdelim}not"{rdelim}, work: "entirely"{rdelim}`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})`,
 }
 
@@ -97,7 +103,7 @@ var expRDelims = []string{
 	`})`,
 	`}`,
 	`}]`,
-	`}, maybe: ""}, did: "not"}, work: "entirely"}`,
+	`}, maybe: ""}, did: "{rdelim}not"}, work: "entirely"}`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]}})`,
 }
 
@@ -122,11 +128,17 @@ var nonRDelims = []string{
 	`const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"`,
 	`</script>`,
 	`</body>`,
+	`"</body>{rdelim}const strangeObject", {ldelim}`,
+	`'asdasd{rdelim}, '{ldelim}`,
+	"`asdas{rdelim}asdas`, {ldelim}",
+	`console.log('{rdelim}')`,
+	`console.log("{ldelim}")`,
+	"object.call('{rdelim}', \"{ldelim}\", `{ldelim} & {rdelim}`)",
 }
 
 func TestParseRDelimMatch(t *testing.T) {
 	for i, line := range rDelims {
-		nl, matched := parseRDelim(line)
+		nl, matched, _ := parseRDelim(line)
 
 		if !matched {
 			t.Fatalf("Should parse: %s", line)
@@ -140,10 +152,10 @@ func TestParseRDelimMatch(t *testing.T) {
 
 func TestParseRDelimNotMatch(t *testing.T) {
 	for _, line := range nonRDelims {
-		nl, matched := parseRDelim(line)
+		nl, matched, _ := parseRDelim(line)
 
 		if matched || nl != line {
-			t.Fatalf("Should not match or perform change on string: %s", line)
+			t.Fatalf("Should not match or perform change on string: %s; %s", line, nl)
 		}
 	}
 }
