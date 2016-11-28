@@ -9,6 +9,12 @@ let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
 const single = {ldelim}{rdelim}
 
+// leave this {ldelim} and {rdelim} intact
+console.log('{rdelim}')
+console.log("{ldelim}")
+object.call('{rdelim}', "{ldelim}", `{ldelim} & {rdelim}`)
+object = {ldelim}left: ["{lrdelim}", "{rdelim}"], right: {ldelim}"{rdelim}", "{ldelim}"{rdelim}{rdelim}
+
 // this is not actually a {literal}
 funcion () {ldelim}// this have ldelim: {ldelim} ?
   let some = 0
