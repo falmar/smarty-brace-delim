@@ -17,6 +17,7 @@ var lDelims = []string{
 	`myObject:{ldelim}`,
 	`const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: "{ldelim}work: ?"`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})`,
+	`object = {ldelim}left: ["{lrdelim}", "{rdelim}"], right: {ldelim}"{rdelim}", "{ldelim}"{rdelim}{rdelim}`,
 }
 
 var expLDelims = []string{
@@ -28,6 +29,7 @@ var expLDelims = []string{
 	`myObject:{`,
 	`const strangeObject = {maybe: {it: {wont: "{ldelim}work: ?"`,
 	`inline_call({hello: "world", myObject:{one: 1, two: [2, 2]{rdelim}{rdelim})`,
+	`object = {left: ["{lrdelim}", "{rdelim}"], right: {"{rdelim}", "{ldelim}"{rdelim}{rdelim}`,
 }
 
 var nonLDelims = []string{
@@ -94,6 +96,7 @@ var rDelims = []string{
 	`{rdelim}]`,
 	`{rdelim}, maybe: ""{rdelim}, did: "{rdelim}not"{rdelim}, work: "entirely"{rdelim}`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]{rdelim}{rdelim})`,
+	`object = {ldelim}left: ["{lrdelim}", "{rdelim}"], right: {ldelim}"{rdelim}", "{ldelim}"{rdelim}{rdelim}`,
 }
 
 var expRDelims = []string{
@@ -105,6 +108,7 @@ var expRDelims = []string{
 	`}]`,
 	`}, maybe: ""}, did: "{rdelim}not"}, work: "entirely"}`,
 	`inline_call({ldelim}hello: "world", myObject:{ldelim}one: 1, two: [2, 2]}})`,
+	`object = {ldelim}left: ["{lrdelim}", "{rdelim}"], right: {ldelim}"{rdelim}", "{ldelim}"}}`,
 }
 
 var nonRDelims = []string{
