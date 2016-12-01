@@ -7,16 +7,16 @@ package main
 import "regexp"
 
 // ------------ SCRIPT TAGS
-func startOfLiteralTag(line string) bool {
-	re := `{literal}(.+({\/literal}))?`
+func startOfPHPTag(line string) bool {
+	re := `{php}(.+({\/php}))?`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return match != nil && len(match) == 3 && match[2] != "{/literal}"
+	return match != nil && len(match) == 3 && match[2] != "</php>"
 }
 
-func endOfLiteralTag(line string) bool {
-	re := `(({literal).+)?{\/literal}`
+func endOfPHPTag(line string) bool {
+	re := `(({php).+)?{\/php}`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
-	return match != nil && len(match) == 3 && match[2] != "{literal"
+	return match != nil && len(match) == 3 && match[2] != "{php"
 }
