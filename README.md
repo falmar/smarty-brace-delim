@@ -29,3 +29,8 @@ Usage of smarty-bracket-delim:
 ## Test
 
 `$ go test github.com/falmar/smarty-bracket-delim -v -cover`
+
+
+## TODO
+
+- Take care not parse anything inside {php} {/php} tags within <script> tag
