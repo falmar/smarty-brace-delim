@@ -9,6 +9,23 @@ let myOtherVar = '{$wuuuu}'
 console.log({include file=$myCustomFile})
 const single = {ldelim}{rdelim}
 
+// {php} tag must remain untouched
+{php}
+
+class PhpTag extends NonExistant {
+  private function whoKnows() {
+    return $_ENV['surprise!'];
+  }
+}
+
+function php($input) {
+  return $input + 1;
+}
+
+echo "{ldelim}", "{rdelim}"
+
+{/php}
+
 // leave this {ldelim} and {rdelim} intact
 console.log('{rdelim}')
 console.log("{ldelim}")
