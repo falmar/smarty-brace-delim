@@ -116,7 +116,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insidePHPTag {
 			insidePHPTag = !endOfPHPTag(line)
-			writer.WriteString(leftComment + line + comment)
+			writer.WriteString(leftComment + line + comment + rightComment)
 			continue
 		}
 
@@ -126,7 +126,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(leftComment + line + comment)
+			writer.WriteString(leftComment + line + comment + rightComment)
 			continue
 		}
 

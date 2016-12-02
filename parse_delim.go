@@ -16,6 +16,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 
 	var insideScriptTag bool
 	var insideLiteralTag bool
+	var insidePHPTag bool
 	var insideMultilineComment bool
 	var cm []string
 	var mlm []string
@@ -83,13 +84,23 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			comment = cm[1] + "\n"
 		}
 
+		if !insidePHPTag {
+			insidePHPTag = startOfPHPTag(line)
+		}
+
+		if insidePHPTag {
+			insidePHPTag = !endOfPHPTag(line)
+			writer.WriteString(leftComment + line + comment + rightComment)
+			continue
+		}
+
 		if !insideLiteralTag {
 			insideLiteralTag = startOfLiteralTag(line)
 		}
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(line + comment)
+			writer.WriteString(leftComment + line + comment + rightComment)
 			continue
 		}
 
