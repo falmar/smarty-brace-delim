@@ -8,14 +8,14 @@ import "regexp"
 
 // ------------ SCRIPT TAGS
 func startOfPHPTag(line string) bool {
-	re := `{php}(.+({\/php}))?`
+	re := `\{php\}(.+(\{\/php\}))?`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	return match != nil && len(match) == 3 && match[2] != "</php>"
 }
 
 func endOfPHPTag(line string) bool {
-	re := `(({php).+)?{\/php}`
+	re := `((\{php).+)?\{\/php\}`
 	match := regexp.MustCompile(re).FindStringSubmatch(line)
 
 	return match != nil && len(match) == 3 && match[2] != "{php"

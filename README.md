@@ -33,5 +33,5 @@ Usage of smarty-bracket-delim:
 
 ## TODO
 
-- [ ] Take care not parse anything inside {php} {/php} tags within <script> tag
+- [x] Take care not parse anything inside {php} {/php} tags within <script> tag
 - [ ] Test main func
