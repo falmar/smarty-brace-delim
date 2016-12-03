@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -20,20 +21,39 @@ var owArg = flag.Bool("ow", false, "Overwrite backup file if already exist")
 func main() {
 	flag.Parse()
 
-	backupSuffix := "_backup"
-	inputPath := *inputArg
-	outputPath := *outputArg
-	removeBackup := *rmArg
-	overWrite := *owArg
-	bracket := *bracketArg
-	delim := *delimArg
+	args := map[string]interface{}{
+		"backupSuffix": "_backup",
+		"inputPath":    *inputArg,
+		"outputPath":   *outputArg,
+		"removeBackup": *rmArg,
+		"overWrite":    *owArg,
+		"bracket":      *bracketArg,
+		"delim":        *delimArg,
+	}
+
+	code, err := altMain(args)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	os.Exit(code)
+}
+
+func altMain(args map[string]interface{}) (int, error) {
+	backupSuffix := args["backupSuffix"].(string)
+	inputPath := args["inputPath"].(string)
+	outputPath := args["outputPath"].(string)
+	removeBackup := args["removeBackup"].(bool)
+	overWrite := args["overWrite"].(bool)
+	bracket := args["bracket"].(bool)
+	delim := args["delim"].(bool)
 
 	if !bracket && !delim {
-		fmt.Println("Must choose an type of action delim or bracket parse")
-		return
+		return 1, errors.New("Must choose an type of action delim or bracket parse")
 	} else if bracket && delim {
-		fmt.Println("Must choose between delim or bracket parse, not both")
-		return
+
+		return 1, errors.New("Must choose between delim or bracket parse, not both")
 	}
 
 	if outputPath == "" {
@@ -42,22 +62,19 @@ func main() {
 
 	backup, err := createBackup(inputPath, backupSuffix, overWrite)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Error ocurred during backup creation: %s", err))
-		return
+		return 2, fmt.Errorf("Error ocurred during backup creation: %s", err)
 	}
 
 	inputFile, err := os.Open(backup)
 	defer inputFile.Close()
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Error ocurred while trying to read backup file: %s", err))
-		return
+		return 3, fmt.Errorf("Error ocurred while trying to read backup file: %s", err)
 	}
 
 	outputFile, err := os.Create(outputPath)
 	defer inputFile.Close()
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Error ocurred creating output file: %s", err))
-		return
+		return 4, fmt.Errorf("Error ocurred creating output file: %s", err)
 	}
 
 	if bracket {
@@ -73,16 +90,16 @@ func main() {
 			t = "delim"
 		}
 
-		fmt.Println(fmt.Sprintf("Error during %s parse operation: %s", t, err))
-		return
+		return 5, fmt.Errorf("Error during %s parse operation: %s", t, err)
 	}
 
 	if removeBackup {
 		err = os.Remove(inputFile.Name())
 
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Error ocurred trying to remove backup file %s", err))
+			return 6, fmt.Errorf("Error ocurred trying to remove backup file %s", err)
 		}
 	}
 
+	return 0, nil
 }

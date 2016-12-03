@@ -3,6 +3,7 @@ note
 *_backup.tpl
 *_ow.tpl
 *_dow.tpl
+*_tm*.tpl
 coverage.txt
 debug.test
 /private_files

@@ -29,8 +29,3 @@ Usage of smarty-bracket-delim:
 ## Test
 
 `$ go test github.com/falmar/smarty-bracket-delim -v -cover`
-
-
-## TODO
-
-- [ ] Test main func
