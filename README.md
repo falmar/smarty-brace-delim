@@ -29,3 +29,15 @@ Usage of smarty-bracket-delim:
 ## Test
 
 `$ go test github.com/falmar/smarty-bracket-delim -v -cover`
+
+## Examples
+
+Using option `-b`
+
+```
+$ smarty-bracket-delim -i path/to/file -o path/to/output_file -b
+```
+
+Will transform the [input file](https://github.com/falmar/smarty-bracket-delim/blob/master/files/simple_bracket.tpl) into [output file](https://github.com/falmar/smarty-bracket-delim/blob/master/files/simple_delim.tpl)
+
+Using the option `-d` will do the opposite
