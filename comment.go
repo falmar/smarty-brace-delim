@@ -40,7 +40,7 @@ func parseCommentLine(line string) ([]string, bool) {
 // -------------- single Multiline
 
 func isMultilineCommentStart(line string, single bool) bool {
-	p := `(.*)\/\*\*(.*)`
+	p := `(.*)\/\*(.*)`
 
 	if !single {
 		p = `(.*)\{\*(.*)`

@@ -214,8 +214,8 @@ var expSmartyMultilineCommentEnd = [][]string{
 }
 
 var nonMultilineComment = []string{
-	`/* /*_* /*\s* /*-* /*text* is comment`,
-	`function (){} /* /*_* /*\s* /*-* /*text*`,
+	`/ /.*_* /.*\s* /.*-* /text* is comment`,
+	`function (){} /.* /.*_* /.*\s* /.*-* /.*text*`,
 	`{ * {_* {\s* {-* is comment *{`,
 	`function (){} { * {_* {\s* {-*`,
 	`(.*)(\{)(.+(}))?(.*) ------------ (.+)?({)$ ldelim | $1{ldelim}`,
@@ -262,7 +262,7 @@ func TestIsMultilineCommentEndSingleMatch(t *testing.T) {
 
 func TestIsMultilineCommentEndSingleNoMatch(t *testing.T) {
 	for _, l := range nonMultilineComment {
-		if isMultilineCommentStart(l, true) {
+		if isMultilineCommentEnd(l, true) {
 			t.Fatalf("Should not match end multiline single comment %s", l)
 		}
 	}
