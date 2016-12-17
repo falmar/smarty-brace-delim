@@ -428,3 +428,73 @@ func TestParseMultilineCommentSmartyEndNoMatch(t *testing.T) {
 		}
 	}
 }
+
+// ------------- Multiline Smarty
+var commentFragmets = []string{
+	`{* is comment *}`,
+	`function (){} {* anything *}`,
+	`function (){} {*  is comment*}}`,
+	`function () { {* Copyright 2016 David*} Lavieri. All rights reserved.`,
+	`some code {* Use of this source code*} is governed by a MIT License`,
+	`<script type="text/javascript"> {* Date: 0/0/0*}`,
+	`console.log({include{* file=$myCustomFile}) {* Time*}: 0:0 PM`,
+	`</script> {* @author*}    David Lavieri /*(falmar)*/ <daviddlavier@gmail.com>`,
+	`/** is comment */`,
+	`function (){} /** */`,
+	`meh.... {* whatever *}function (){} /**  is comment*/`,
+	`{*i hate her :*}function () { /** Copyright 2016 David Lavieri. /** All rights reserved. */ }`,
+	`some code /** Use*/ of this {*source code*} is /*governed by a MIT*/ License more code`,
+	`console.log({include/** file=$myCustomFile}) /** Time: 0:0 PM*/`,
+}
+
+var expCommentFragmets = [][]string{
+	[]string{`[FCT-0]`, `{* is comment *}`},
+	[]string{`function (){} [FCT-0]`, `{* anything *}`},
+	[]string{`function (){} [FCT-0]}`, `{*  is comment*}`},
+	[]string{`function () { [FCT-0] Lavieri. All rights reserved.`, `{* Copyright 2016 David*}`},
+	[]string{`some code [FCT-0] is governed by a MIT License`, `{* Use of this source code*}`},
+	[]string{`<script type="text/javascript"> [FCT-0]`, `{* Date: 0/0/0*}`},
+	[]string{`console.log({include[FCT-0]: 0:0 PM`, `{* file=$myCustomFile}) {* Time*}`},
+	[]string{`</script> [FCT-1]    David Lavieri [FCT-0] <daviddlavier@gmail.com>`, `/*(falmar)*/`, `{* @author*}`},
+	[]string{`[FCT-0]`, `/** is comment */`},
+	[]string{`function (){} [FCT-0]`, `/** */`},
+	[]string{`meh.... [FCT-1]function (){} [FCT-0]`, `/**  is comment*/`, `{* whatever *}`},
+	[]string{`[FCT-1]function () { [FCT-0] }`, `/** Copyright 2016 David Lavieri. /** All rights reserved. */`, `{*i hate her :*}`},
+	[]string{`some code [FCT-0] of this [FCT-2] is [FCT-1] License more code`, `/** Use*/`, `/*governed by a MIT*/`, `{*source code*}`},
+	[]string{`console.log({include[FCT-0]`, `/** file=$myCustomFile}) /** Time: 0:0 PM*/`},
+}
+
+// ------------- Comment Fragments
+func TestParseCommentFragmentMatch(t *testing.T) {
+	for i, c := range commentFragmets {
+		left, match := parseCommentFragmets(c)
+
+		if len(match) != len(expCommentFragmets[i])-1 {
+			t.Fatalf("Expected to match: %d; got: %d", len(expCommentFragmets[i])-1, len(match))
+		}
+
+		if expCommentFragmets[i][0] != left {
+			t.Fatalf("Expected left to be: %s; got: %s", expCommentFragmets[i][0], left)
+		}
+
+		for z, m := range match {
+			if expCommentFragmets[i][z+1] != m {
+				t.Fatalf("Expected comment to be: %s; got: %s", expCommentFragmets[i][z+1], m)
+			}
+		}
+	}
+}
+
+func TestParseCommentFragmentNoMatch(t *testing.T) {
+	for i, c := range nonMultilineComment {
+		left, match := parseCommentFragmets(c)
+
+		if match != nil {
+			t.Fatal("Expected to not match", len(expCommentFragmets[i])-1, len(match))
+		}
+
+		if left != c {
+			t.Fatalf("Expected to match: %s; got: %s", c, left)
+		}
+	}
+}

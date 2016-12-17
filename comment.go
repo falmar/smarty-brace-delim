@@ -4,7 +4,11 @@
 
 package main
 
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+	"strings"
+)
 
 func isCommentLine(line string) bool {
 	return regexp.MustCompile(`(.*)\/\/(.*)`).MatchString(line)
@@ -123,4 +127,44 @@ func parseMultilineCommentEnd(line string, single bool) ([]string, bool) {
 	}
 
 	return []string{nLine, matches[2]}, true
+}
+
+// ------------- Comment Fragments
+
+func parseCommentFragmets(line string) (string, []string) {
+	nLine := line
+	var match []string
+
+	re := regexp.MustCompile(`(.*?)(\/\*.*?\*\/)(.*)`)
+	for {
+		matches := re.FindStringSubmatch(nLine)
+
+		if matches == nil {
+			break
+		}
+
+		nLine = matches[1] + matches[3]
+		match = append(match, matches[2])
+	}
+
+	nLine = line
+	re = regexp.MustCompile(`(.*?)(\{\*.*?\*\})(.*)`)
+	for {
+		matches := re.FindStringSubmatch(nLine)
+
+		if matches == nil {
+			break
+		}
+
+		nLine = matches[1] + matches[3]
+		match = append(match, matches[2])
+	}
+
+	if len(match) > 0 {
+		for i, v := range match {
+			line = strings.Replace(line, v, "[FCT-"+strconv.Itoa(i)+"]", 1)
+		}
+	}
+
+	return line, match
 }
