@@ -44,4 +44,4 @@ Using the option `-d` will do the opposite
 
 ## TODO
 
-- Take care of fragments multiline comments eg. `function { {* comment *}   }`
+- [x] Take care of fragments multiline comments eg. `function { {* comment *}   }`
