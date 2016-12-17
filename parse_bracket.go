@@ -7,6 +7,8 @@ package main
 import (
 	"bufio"
 	"io"
+	"strconv"
+	"strings"
 )
 
 // ----------------------- BRACKETS
@@ -45,6 +47,14 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 		return line
 	}
 
+	assembleFragments := func(l string, fragmets []string) string {
+		for i, v := range fragmets {
+			l = strings.Replace(l, "[FCT-"+strconv.Itoa(i)+"]", v, 1)
+		}
+
+		return l
+	}
+
 	for {
 		var isCommentLine bool
 		var firstML bool
@@ -67,6 +77,8 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 			writer.WriteString(line)
 			continue
 		}
+
+		line, fragments := parseCommentFragmets(line)
 
 		if !insideMultilineComment {
 			mlm, insideMultilineComment = parseMultilineCommentStart(line, false)
@@ -116,7 +128,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insidePHPTag {
 			insidePHPTag = !endOfPHPTag(line)
-			writer.WriteString(leftComment + line + comment + rightComment)
+			writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 			continue
 		}
 
@@ -126,7 +138,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(leftComment + line + comment + rightComment)
+			writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 			continue
 		}
 
@@ -146,7 +158,7 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 			insideScriptTag = !endOfScriptTag(line)
 		}
 
-		writer.WriteString(leftComment + line + comment + rightComment)
+		writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 	}
 
 	writer.Flush()

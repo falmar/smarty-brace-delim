@@ -7,6 +7,8 @@ package main
 import (
 	"bufio"
 	"io"
+	"strconv"
+	"strings"
 )
 
 // ----------------------- DELIMS
@@ -20,6 +22,14 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 	var insideMultilineComment bool
 	var cm []string
 	var mlm []string
+
+	assembleFragments := func(l string, fragmets []string) string {
+		for i, v := range fragmets {
+			l = strings.Replace(l, "[FCT-"+strconv.Itoa(i)+"]", v, 1)
+		}
+
+		return l
+	}
 
 	for {
 		var isCommentLine bool
@@ -43,6 +53,8 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			writer.WriteString(line)
 			continue
 		}
+
+		line, fragments := parseCommentFragmets(line)
 
 		if !insideMultilineComment {
 			mlm, insideMultilineComment = parseMultilineCommentStart(line, false)
@@ -90,7 +102,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insidePHPTag {
 			insidePHPTag = !endOfPHPTag(line)
-			writer.WriteString(leftComment + line + comment + rightComment)
+			writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 			continue
 		}
 
@@ -100,7 +112,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 
 		if insideLiteralTag {
 			insideLiteralTag = !endOfLiteralTag(line)
-			writer.WriteString(leftComment + line + comment + rightComment)
+			writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 			continue
 		}
 
@@ -118,7 +130,7 @@ func parseDelims(inputFile io.Reader, outputFile io.Writer) error {
 			insideScriptTag = !endOfScriptTag(line)
 		}
 
-		writer.WriteString(leftComment + line + comment + rightComment)
+		writer.WriteString(assembleFragments(leftComment+line+comment+rightComment, fragments))
 	}
 
 	writer.Flush()

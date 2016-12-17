@@ -40,11 +40,15 @@ funcion () {ldelim}// this have ldelim: {ldelim} ?
 {rdelim}
 // of course not the end of {/literal}
 
+{* this is multiline / partial smarty comment *}
+
 call({ldelim}
   hello: "world"
 {rdelim}, {ldelim}
   world: "hello"
 {rdelim})
+
+/* this is multiline / partial js comment */
 
 let array = [{ldelim}
   hello: "world",
@@ -53,6 +57,8 @@ let array = [{ldelim}
     two: [2, 2]
   {rdelim} // this must be rdelim: {rdelim}
 {rdelim}]
+
+const {*} comment {*}commentedObject = {ldelim}name: 'thing' /* comment */, thing: {*comment*} 'name'{rdelim}
 
 {literal}
 $.fn.serializeObject = function () {
