@@ -1,21 +1,21 @@
-# smarty-bracket-delim
+# smarty-brace-delim
 
-[![Status](https://travis-ci.org/falmar/smarty-bracket-delim.svg?branch=master)](https://travis-ci.org/falmar/smarty-bracket-delim) [![Codecov](https://img.shields.io/codecov/c/github/falmar/smarty-bracket-delim.svg)](https://codecov.io/gh/falmar/smarty-bracket-delim)
+[![Status](https://travis-ci.org/falmar/smarty-brace-delim.svg?branch=master)](https://travis-ci.org/falmar/smarty-brace-delim) [![Codecov](https://img.shields.io/codecov/c/github/falmar/smarty-brace-delim.svg)](https://codecov.io/gh/falmar/smarty-brace-delim)
 
-Replace `{rdelim}` and `{ldelim}` Smarty brackets delimiters for real brackets `{` and `}` or viceversa from Smarty templates
+Replace `{rdelim}` and `{ldelim}` Smarty braces delimiters for real braces `{` and `}` or viceversa from Smarty templates
 
 
 ## Install
 
-`$ go get github.com/falmar/smarty-bracket-delim`
+`$ go get github.com/falmar/smarty-brace-delim`
 
 ## Usage
 
 ```
-$ smarty-bracket-delim -h
-Usage of smarty-bracket-delim:
-  -b	Parse brackets into {delim}
-  -d	Parse {delim} into brackets
+$ smarty-brace-delim -h
+Usage of smarty-brace-delim:
+  -b	Parse braces into {delim}
+  -d	Parse {delim} into braces
   -i string
     	Input file path
   -o string
@@ -28,17 +28,17 @@ Usage of smarty-bracket-delim:
 
 ## Test
 
-`$ go test github.com/falmar/smarty-bracket-delim -v -cover`
+`$ go test github.com/falmar/smarty-brace-delim -v -cover`
 
 ## Examples
 
 Using option `-b`
 
 ```
-$ smarty-bracket-delim -i path/to/file -o path/to/output_file -b
+$ smarty-brace-delim -i path/to/file -o path/to/output_file -b
 ```
 
-Will transform the [input file](https://github.com/falmar/smarty-bracket-delim/blob/master/files/simple_bracket.tpl) into [output file](https://github.com/falmar/smarty-bracket-delim/blob/master/files/simple_delim.tpl)
+Will transform the [input file](https://github.com/falmar/smarty-brace-delim/blob/master/files/simple_brace.tpl) into [output file](https://github.com/falmar/smarty-brace-delim/blob/master/files/simple_delim.tpl)
 
 Using the option `-d` will do the opposite
 

@@ -11,9 +11,9 @@ import (
 	"testing"
 )
 
-func TestParseFileBracket(t *testing.T) {
-	input := "files/simple_bracket.tpl"
-	output := "files/simple_bracket_parsed.tpl"
+func TestParseFileBrace(t *testing.T) {
+	input := "files/simple_brace.tpl"
+	output := "files/simple_brace_parsed.tpl"
 	exp := "files/simple_delim.tpl"
 
 	inputFile, err := os.Open(input)
@@ -28,7 +28,7 @@ func TestParseFileBracket(t *testing.T) {
 		t.Fatalf("Error opening output file: %s", err)
 	}
 
-	err = parseBrackets(inputFile, outPutFile)
+	err = parseBraces(inputFile, outPutFile)
 
 	if err != nil {
 		t.Fatalf("Error during parse: %s", err)

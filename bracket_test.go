@@ -6,9 +6,9 @@ package main
 
 import "testing"
 
-// ------------ LEFT BRACKET
+// ------------ LEFT BRACE
 
-var leftBracket = []string{
+var leftBrace = []string{
 	"function () {",
 	"call({",
 	"myObject: { // random comment",
@@ -19,7 +19,7 @@ var leftBracket = []string{
 	"{}",
 }
 
-var expLeftBracket = []string{
+var expLeftBrace = []string{
 	"function () {ldelim}",
 	"call({ldelim}",
 	"myObject: {ldelim} // random comment",
@@ -30,7 +30,7 @@ var expLeftBracket = []string{
 	"{ldelim}}",
 }
 
-var nonLeftBracket = []string{
+var nonLeftBrace = []string{
 	`<body>`,
 	`{$some_variable}`,
 	`Outside the script tag may be pure html or may not`,
@@ -52,23 +52,23 @@ var nonLeftBracket = []string{
 	`</body>`,
 }
 
-func TestParseLeftBracketMatch(t *testing.T) {
-	for i, line := range leftBracket {
-		nl, matched := parseLeftBracket(line)
+func TestParseLeftBraceMatch(t *testing.T) {
+	for i, line := range leftBrace {
+		nl, matched := parseLeftBrace(line)
 
 		if !matched {
 			t.Fatalf("Should match %s", line)
 		}
 
-		if nl != expLeftBracket[i] {
-			t.Fatalf("Expected left bracket parsed: %s; got: %s", expLeftBracket[i], nl)
+		if nl != expLeftBrace[i] {
+			t.Fatalf("Expected left brace parsed: %s; got: %s", expLeftBrace[i], nl)
 		}
 	}
 }
 
-func TestParseLeftBracketNoMatch(t *testing.T) {
-	for _, line := range nonLeftBracket {
-		nl, matched := parseLeftBracket(line)
+func TestParseLeftBraceNoMatch(t *testing.T) {
+	for _, line := range nonLeftBrace {
+		nl, matched := parseLeftBrace(line)
 
 		if matched && nl != line {
 			t.Fatalf("Should not match %s; %s", line, nl)
@@ -76,9 +76,9 @@ func TestParseLeftBracketNoMatch(t *testing.T) {
 	}
 }
 
-// ------------ RIGHT BRACKET
+// ------------ RIGHT BRACE
 
-var rightBracket = []string{
+var rightBrace = []string{
 	`everthing }`,
 	`}, { should`,
 	`be }) good`,
@@ -91,7 +91,7 @@ var rightBracket = []string{
 	"{}",
 }
 
-var expRightBracket = []string{
+var expRightBrace = []string{
 	`everthing {rdelim}`,
 	`{rdelim}, { should`,
 	`be {rdelim}) good`,
@@ -104,7 +104,7 @@ var expRightBracket = []string{
 	"{{rdelim}",
 }
 
-var nonRightBracket = []string{
+var nonRightBrace = []string{
 	`<body>`,
 	`{$some_variable}`,
 	`Outside the script tag may be pure html or may not`,
@@ -130,23 +130,23 @@ var nonRightBracket = []string{
 	`</body>`,
 }
 
-func TestParseRightBracket(t *testing.T) {
-	for i, line := range rightBracket {
-		nl, matched := parseRightBracket(line)
+func TestParseRightBrace(t *testing.T) {
+	for i, line := range rightBrace {
+		nl, matched := parseRightBrace(line)
 
 		if !matched {
 			t.Fatalf("Should match: %s", line)
 		}
 
-		if nl != expRightBracket[i] {
-			t.Fatalf("Expected right bracket parsed: %s; got: %s", expRightBracket[i], nl)
+		if nl != expRightBrace[i] {
+			t.Fatalf("Expected right brace parsed: %s; got: %s", expRightBrace[i], nl)
 		}
 	}
 }
 
-func TestParseRightBracketNoMatch(t *testing.T) {
-	for _, line := range nonRightBracket {
-		nl, matched := parseRightBracket(line)
+func TestParseRightBraceNoMatch(t *testing.T) {
+	for _, line := range nonRightBrace {
+		nl, matched := parseRightBrace(line)
 
 		if matched && nl != line {
 			t.Fatalf("Should not match %s; %s", line, nl)

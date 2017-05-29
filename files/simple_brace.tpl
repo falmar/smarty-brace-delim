@@ -129,7 +129,7 @@ switch (key) {
         return false
 }
 
-// this {object has { lots and lots for brackets {
+// this {object has { lots and lots for braces {
 const strangeObject = {maybe: {it: {wont: {work: "?"
 }, maybe: ""}, did: "not"}, work: "entirely"}
 // but } it should not} be affected at all }

@@ -13,8 +13,8 @@ import (
 
 var inputArg = flag.String("i", "", "Input file path")
 var outputArg = flag.String("o", "", "Output file path (if not provied will overwrite input file)")
-var bracketArg = flag.Bool("b", false, "Parse brackets into {delim}")
-var delimArg = flag.Bool("d", false, "Parse {delim} into brackets")
+var braceArg = flag.Bool("b", false, "Parse braces into {delim}")
+var delimArg = flag.Bool("d", false, "Parse {delim} into braces")
 var rmArg = flag.Bool("rm", false, "Remove backup file after parse")
 var owArg = flag.Bool("ow", false, "Overwrite backup file if already exist")
 
@@ -27,7 +27,7 @@ func main() {
 		"outputPath":   *outputArg,
 		"removeBackup": *rmArg,
 		"overWrite":    *owArg,
-		"bracket":      *bracketArg,
+		"brace":      *braceArg,
 		"delim":        *delimArg,
 	}
 
@@ -46,14 +46,14 @@ func altMain(args map[string]interface{}) (int, error) {
 	outputPath := args["outputPath"].(string)
 	removeBackup := args["removeBackup"].(bool)
 	overWrite := args["overWrite"].(bool)
-	bracket := args["bracket"].(bool)
+	brace := args["brace"].(bool)
 	delim := args["delim"].(bool)
 
-	if !bracket && !delim {
-		return 1, errors.New("Must choose an type of action delim or bracket parse")
-	} else if bracket && delim {
+	if !brace && !delim {
+		return 1, errors.New("Must choose an type of action delim or brace parse")
+	} else if brace && delim {
 
-		return 1, errors.New("Must choose between delim or bracket parse, not both")
+		return 1, errors.New("Must choose between delim or brace parse, not both")
 	}
 
 	if outputPath == "" {
@@ -77,14 +77,14 @@ func altMain(args map[string]interface{}) (int, error) {
 		return 4, fmt.Errorf("Error ocurred creating output file: %s", err)
 	}
 
-	if bracket {
-		err = parseBrackets(inputFile, outputFile)
+	if brace {
+		err = parseBraces(inputFile, outputFile)
 	} else if delim {
 		err = parseDelims(inputFile, outputFile)
 	}
 
 	if err != nil {
-		t := "bracket"
+		t := "brace"
 
 		if delim {
 			t = "delim"

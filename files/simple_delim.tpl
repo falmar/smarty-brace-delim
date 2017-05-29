@@ -129,7 +129,7 @@ switch (key) {ldelim}
         return false
 {rdelim}
 
-// this {object has { lots and lots for brackets {
+// this {object has { lots and lots for braces {
 const strangeObject = {ldelim}maybe: {ldelim}it: {ldelim}wont: {ldelim}work: "?"
 {rdelim}, maybe: ""{rdelim}, did: "not"{rdelim}, work: "entirely"{rdelim}
 // but } it should not} be affected at all }

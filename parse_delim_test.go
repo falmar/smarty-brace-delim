@@ -14,7 +14,7 @@ import (
 func TestParseFileDelim(t *testing.T) {
 	input := "files/simple_delim.tpl"
 	output := "files/simple_delim_parsed.tpl"
-	exp := "files/simple_bracket.tpl"
+	exp := "files/simple_brace.tpl"
 
 	inputFile, err := os.Open(input)
 	defer inputFile.Close()

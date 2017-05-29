@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-// ----------------------- BRACKETS
-func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
+// ----------------------- BRACES
+func parseBraces(inputFile io.Reader, outputFile io.Writer) error {
 	reader := bufio.NewReaderSize(inputFile, 1024)
 	writer := bufio.NewWriterSize(outputFile, 1024)
 
@@ -34,10 +34,10 @@ func parseBrackets(inputFile io.Reader, outputFile io.Writer) error {
 		line, matched = parseInlineObject(line)
 		anyMatched = anyMatched || matched
 
-		line, matched = parseLeftBracket(line)
+		line, matched = parseLeftBrace(line)
 		anyMatched = anyMatched || matched
 
-		line, matched = parseRightBracket(line)
+		line, matched = parseRightBrace(line)
 		anyMatched = anyMatched || matched
 
 		if anyMatched && lf {

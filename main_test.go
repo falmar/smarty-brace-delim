@@ -16,7 +16,7 @@ func getCommonFlags() map[string]interface{} {
 		"outputPath":   "",
 		"removeBackup": false,
 		"overWrite":    false,
-		"bracket":      false,
+		"brace":      false,
 		"delim":        false,
 	}
 }
@@ -24,7 +24,7 @@ func getCommonFlags() map[string]interface{} {
 func TestMainCheckParseOptionNone(t *testing.T) {
 	cflags := getCommonFlags()
 	expCode := 1
-	expErr := "Must choose an type of action delim or bracket parse"
+	expErr := "Must choose an type of action delim or brace parse"
 	code, err := altMain(cflags)
 
 	if code != expCode {
@@ -43,10 +43,10 @@ func TestMainCheckParseOptionNone(t *testing.T) {
 func TestMainCheckParseOptionBoth(t *testing.T) {
 	cflags := getCommonFlags()
 	cflags["delim"] = true
-	cflags["bracket"] = true
+	cflags["brace"] = true
 
 	expCode := 1
-	expErr := "Must choose between delim or bracket parse, not both"
+	expErr := "Must choose between delim or brace parse, not both"
 
 	code, err := altMain(cflags)
 
@@ -67,14 +67,14 @@ func TestMainDontOverwrite(t *testing.T) {
 	cflags := getCommonFlags()
 	cflags["delim"] = true
 	cflags["overWrite"] = false
-	cflags["inputPath"] = "files/simple_bracket.tpl"
-	cflags["outputPath"] = "files/simple_bracket_tm1.tpl"
+	cflags["inputPath"] = "files/simple_brace.tpl"
+	cflags["outputPath"] = "files/simple_brace_tm1.tpl"
 	cflags["backupSuffix"] = "_tm1_backup"
 
 	expCode := 2
 	expErr := "Error ocurred during backup creation: Backup file already exist"
 
-	_, err := os.Create("files/simple_bracket_tm1_backup.tpl")
+	_, err := os.Create("files/simple_brace_tm1_backup.tpl")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,13 +98,13 @@ func TestMainOverwrite(t *testing.T) {
 	cflags := getCommonFlags()
 	cflags["delim"] = true
 	cflags["overWrite"] = true
-	cflags["inputPath"] = "files/simple_bracket.tpl"
-	cflags["outputPath"] = "files/simple_bracket_tm2.tpl"
+	cflags["inputPath"] = "files/simple_brace.tpl"
+	cflags["outputPath"] = "files/simple_brace_tm2.tpl"
 	cflags["backupSuffix"] = "_tm2_backup"
 
 	expCode := 0
 
-	_, err := os.Create("files/simple_bracket_tm2_backup.tpl")
+	_, err := os.Create("files/simple_brace_tm2_backup.tpl")
 
 	if err != nil {
 		t.Fatal(err)
@@ -123,7 +123,7 @@ func TestMainOverwrite(t *testing.T) {
 
 func TestMainDontRemoveBackup(t *testing.T) {
 	cflags := getCommonFlags()
-	cflags["bracket"] = true
+	cflags["brace"] = true
 	cflags["overWrite"] = true
 	cflags["removeBackup"] = false
 	cflags["inputPath"] = "files/simple_delim.tpl"
@@ -151,7 +151,7 @@ func TestMainDontRemoveBackup(t *testing.T) {
 
 func TestMainRemoveBackup(t *testing.T) {
 	cflags := getCommonFlags()
-	cflags["bracket"] = true
+	cflags["brace"] = true
 	cflags["overWrite"] = true
 	cflags["removeBackup"] = true
 	cflags["inputPath"] = "files/simple_delim.tpl"
