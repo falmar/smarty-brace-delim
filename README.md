@@ -19,7 +19,7 @@ Usage of smarty-brace-delim:
   -i string
     	Input file path
   -o string
-    	Output file path (if not provied will overwrite input file)
+    	Output file path absolute or relative (to input) NOTE: if not provied will overwrite input file
   -ow
     	Overwrite backup file if already exist
   -rm
